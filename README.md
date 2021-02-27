@@ -87,6 +87,8 @@ Example of a bruteforce attack testing passcodes of 2-10 characters length, with
 py7dtd_crack_passcode --brute --min 2 --max 10 --delay 20 --limit 100
 ```
 
+![detection](preview/bruteforce-preview.gif)
+
 Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
 
 ```bash
@@ -94,6 +96,8 @@ py7dtd_crack_passcode --dict --dictpath passwords.txt --delay 30
 ```
 
 Note: dictionaries can be found at <https://github.com/danielmiessler/SecLists/tree/master/Passwords>.
+
+![detection](preview/dictionary-preview.gif)
 
 ### Command line arguments
 
@@ -107,6 +111,6 @@ The following table is listing all the arguments to use for each method:
 | max           | Maximum length                | `20`|`brute`|
 | dictpath      | Dictionary file path          | `None`|`dict`*|
 | limit         | Maximum number of tries       | `∞`|`brute`, `dict`|
-| delay         | Delay in ms between each try  | `20`|`brute`, `dict`|
+| delay         | Delay in ms between each mouse/keyboard action  | `20`|`brute`, `dict`|
 
 **this attribute is required*

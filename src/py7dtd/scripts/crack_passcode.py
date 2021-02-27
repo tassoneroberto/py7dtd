@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-import fileinput
-import importlib.resources as pkg_resources
 import logging
 import string
 import time
-from ctypes import windll
 from itertools import product
 
 import win32com.client as comclt
@@ -37,7 +34,7 @@ def main():
     parser.add_argument(
         "--delay",
         default=50,
-        help="Delay in ms between each try (default = 50)",
+        help="Delay in ms between each mouse/keyboard action (default = 50)",
         type=int,
     )
     parser.add_argument(
@@ -49,7 +46,7 @@ def main():
 
     if args.brute and args.dict:
         logging.error(
-            "Error: only a method can be selected. Available are: `brute`, `dict`."
+            "Error: only one method can be selected. Available are: `brute`, `dict`."
         )
         exit()
 
@@ -102,6 +99,7 @@ def main():
     if args.dict:
         with open(args.dictpath, "r") as dict_file:
             for line in dict_file:
+                time.sleep(delay)
                 RightMouseClick()
                 time.sleep(delay)
                 wsh.SendKeys(line.strip())
