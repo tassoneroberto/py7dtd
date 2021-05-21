@@ -10,7 +10,7 @@ setup(
     keywords=["7dtd", "bots", "hacks", "scripts"],
     long_description=open("README.md").read(),
     install_requires=[
-        "tensorflow==2.4.0",
+        "tensorflow==2.5.0",
         "tensorflow-gpu==2.4.0",
         "keras==2.4.3",
         "numpy==1.19.3",
