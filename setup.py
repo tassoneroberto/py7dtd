@@ -14,7 +14,7 @@ setup(
         "tensorflow-gpu==2.4.1",
         "keras==2.4.3",
         "numpy==1.19.3",
-        "pillow==7.1.0",
+        "pillow==8.2.0",
         "scipy==1.4.1",
         "h5py==2.10.0",
         "matplotlib==3.3.2",
