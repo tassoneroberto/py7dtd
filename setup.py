@@ -11,7 +11,7 @@ setup(
     long_description=open("README.md").read(),
     install_requires=[
         "tensorflow==2.4.2",
-        "tensorflow-gpu==2.4.2",
+        "tensorflow-gpu==2.5.1",
         "keras==2.4.3",
         "numpy==1.19.3",
         "pillow==8.2.0",
