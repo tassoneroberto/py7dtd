@@ -22,7 +22,7 @@ setup(
         "keras-resnet==0.2.0",
         "imageai==2.1.6",
         "labelImg==1.8.3",
-        "pywin32==228",
+        "pywin32==301",
     ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
