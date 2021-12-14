@@ -11,11 +11,21 @@ In this repository are collected tools and scripts for the game 7 Days to Die:
 - Aim bots
 - Passcode cracking
 
-## Installation
+## Installation (Windows)
+
+Clone the module, create a virtual environment and install it:
+
+```bash
+git clone git@github.com:tassoneroberto/py7dtd.git
+cd py7dtd
+py -3.7 -m venv venv
+.\venv\Scripts\Activate.ps1
+py -3.7 -m pip install .
+```
+
+### Dependencies for entities detection
 
 Disclaimer: an NVIDIA® GPU card with CUDA® architectures 3.5, 3.7, 5.2, 6.0, 6.1, 7.0 or higher is required. See the list of CUDA®-enabled GPU cards (<https://developer.nvidia.com/cuda-gpus>).
-
-### Windows
 
 Install the following dependencies:
 
@@ -31,15 +41,11 @@ You can download it at this page: <https://www.python.org/downloads/windows/>
 
 Download link: <https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe>
 
-Clone the module, create a virtual environment and install it:
+You also need to download the trained model (<https://github.com/tassoneroberto/py7dtd/releases/download/v0.2/model.h5>) for the entities detection and put it in `src/ai/models/v2/model.h5`.
 
-```bash
-git clone git@github.com:tassoneroberto/py7dtd.git
-cd py7dtd
-py -3.7 -m venv venv
-.\venv\Scripts\Activate.ps1
-py -3.7 -m pip install .
-```
+### Optional
+
+To be able to train a model you need to download the `ImageAI`'s pre-trained model (<https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/pretrained-yolov3.h5>) and put it in `./src/ai/`.
 
 ## Entities detection
 
