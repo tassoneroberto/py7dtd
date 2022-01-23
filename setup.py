@@ -13,7 +13,7 @@ setup(
         "tensorflow==2.5.2",
         "tensorflow-gpu==2.5.2",
         "keras==2.4.3",
-        "numpy==1.19.3",
+        "numpy==1.21.0",
         "pillow==9.0.0",
         "scipy==1.4.1",
         "h5py==2.10.0",
