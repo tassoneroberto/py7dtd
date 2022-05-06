@@ -26,7 +26,7 @@ py -m pip install .[ai]
 Note: if you are only interested in the `crack passcode` function you can omit `[ai]` from the above command:
 
 ```bash
-py -m pip install -e .[ai]
+py -m pip install .
 ```
 
 ### Dev mode
@@ -34,7 +34,7 @@ py -m pip install -e .[ai]
 To install the package in edit mode (for developers) specify `-e`:
 
 ```bash
-py -m pip install .[ai]
+py -m pip install -e .[ai]
 ```
 
 ### Dependencies for entities detection
@@ -132,9 +132,9 @@ The following table is listing all the arguments to use for each method:
 | min           | Minimum length                  | `1`|`brute`|
 | max           | Maximum length                  | `20`|`brute`|
 | digits        | Include digits                  | `False`**|`brute`|
-| lower         | Include digits                  | `False`**|`brute`|
-| upper         | Include digits                  | `False`**|`brute`|
-| special       | Include digits                  | `False`**|`brute`|
+| lower         | Include lowercase characters    | `False`**|`brute`|
+| upper         | Include uppercase characters    | `False`**|`brute`|
+| special       | Include special characters      | `False`**|`brute`|
 | dictpath      | Dictionary file path            | `None`|`dict`*|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
 | timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
