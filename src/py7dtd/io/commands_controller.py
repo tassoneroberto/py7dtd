@@ -5,7 +5,9 @@ import ctypes
 import win32api
 import win32con
 
-SendInput = ctypes.windll.user32.SendInput
+sendInput = ctypes.windll.user32.SendInput
+mouseEvent = ctypes.windll.user32.mouse_event
+getSystemMetrics = ctypes.windll.user32.GetSystemMetrics
 
 PUL = ctypes.POINTER(ctypes.c_ulong)
 
@@ -52,7 +54,7 @@ def PressKey(hexKeyCode):
     ii_ = Input_I()
     ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(1), ii_)
-    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+    sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
 def ReleaseKey(hexKeyCode):
@@ -60,17 +62,17 @@ def ReleaseKey(hexKeyCode):
     ii_ = Input_I()
     ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(1), ii_)
-    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+    sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
 def MoveMouseAbsolute(x, y):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    x = int(x * (65536 / ctypes.windll.user32.GetSystemMetrics(0)) + 1)
-    y = int(y * (65536 / ctypes.windll.user32.GetSystemMetrics(1)) + 1)
+    x = int(x * (65536 / getSystemMetrics(0)) + 1)
+    y = int(y * (65536 / getSystemMetrics(1)) + 1)
     ii_.mi = MouseInput(x, y, 0, 0x0001 | 0x8000, 1, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(0), ii_)
-    ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+    sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
 def MoveMouseRel(x, y):
@@ -78,30 +80,19 @@ def MoveMouseRel(x, y):
 
 
 def LeftMouseClick():
-    ctypes.windll.user32.mouse_event(
-        0x2, 0, 0, 0, 0
-    )  # Mouse LClick Down, relative coords, dx=0, dy=0
-    ctypes.windll.user32.mouse_event(
-        0x4, 0, 0, 0, 0
-    )  # Mouse LClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x2, 0, 0, 0, 0)  # Mouse LClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x4, 0, 0, 0, 0)  # Mouse LClick Up, relative coords, dx=0, dy=0
 
 
 def RightMouseClick():
-    ctypes.windll.user32.mouse_event(
-        0x8, 0, 0, 0, 0
-    )  # Mouse RClick Down, relative coords, dx=0, dy=0
-    ctypes.windll.user32.mouse_event(
-        0x10, 0, 0, 0, 0
-    )  # Mouse RClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x8, 0, 0, 0, 0)  # Mouse RClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x10, 0, 0, 0, 0)  # Mouse RClick Up, relative coords, dx=0, dy=0
 
 
 def MiddleMouseClick():
-    ctypes.windll.user32.mouse_event(
-        0x20, 0, 0, 0, 0
-    )  # Mouse MClick Down, relative coords, dx=0, dy=0
-    ctypes.windll.user32.mouse_event(
-        0x40, 0, 0, 0, 0
-    )  # Mouse MClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x20, 0, 0, 0, 0)  # Mouse MClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x40, 0, 0, 0, 0)  # Mouse MClick Up, relative coords, dx=0, dy=0
 
 
-# directx scan codes http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+# directx codes http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+# alternative source: https://gist.github.com/tracend/912308

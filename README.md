@@ -103,8 +103,10 @@ Bruteforce/dictionary attack on chests/doors passcode.
 
 Example of a bruteforce attack testing passcodes of 2-10 characters length, with a delay of 20ms between each try and a limit of 100 tries.
 
+Note: Press `ESC` to interrupt the script.
+
 ```bash
-py7dtd_crack_passcode --brute --min 2 --max 10 --delay 20 --limit 100
+py7dtd_crack_passcode --brute --digits --lower --min 1 --max 10 --delay 20 --limit 100 --timeout 60
 ```
 
 ![detection](preview/bruteforce-preview.gif)
@@ -125,12 +127,19 @@ The available methods are **bruteforce attack** (`--brute`) and **dictionary att
 
 The following table is listing all the arguments to use for each method:
 
-| arg           |  description      |  default  | type     |
-|:-------------:|:-----------------:| :--------:|:--------:|
-| min           | Minimum length                | `1`|`brute`|
-| max           | Maximum length                | `20`|`brute`|
-| dictpath      | Dictionary file path          | `None`|`dict`*|
-| limit         | Maximum number of tries       | `∞`|`brute`, `dict`|
-| delay         | Delay in ms between each mouse/keyboard action  | `20`|`brute`, `dict`|
+| arg           |  description      |   default   | type     |
+|:-------------:|:-----------------:| :----------:|:--------:|
+| min           | Minimum length                  | `1`|`brute`|
+| max           | Maximum length                  | `20`|`brute`|
+| digits        | Include digits                  | `False`**|`brute`|
+| lower         | Include digits                  | `False`**|`brute`|
+| upper         | Include digits                  | `False`**|`brute`|
+| special       | Include digits                  | `False`**|`brute`|
+| dictpath      | Dictionary file path            | `None`|`dict`*|
+| limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
+| timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
+| delay         | Delay in ms between each action | `20`|`brute`, `dict`|
 
-**this attribute is required*
+**This attribute is required if `dict` is selected*
+
+***At least one of these is required*

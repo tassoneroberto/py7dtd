@@ -72,7 +72,7 @@ def main():
 
         print(f"Detected Entities: {detected_entities}")
 
-        # If zombies are detected, get the nearest (biggest rectangle) and shoot it
+        # If zombies are detected, get the nearest (biggest rectangle)
         if "zombie" in detected_entities:
             nearest = detected_entities["zombie"][0]
             if len(detected_entities["zombie"]) > 1:
@@ -81,11 +81,10 @@ def main():
                     current_area = (current[2] - current[0]) * (current[3] - current[1])
                     if current_area > nearest_area:
                         nearest = current
-            box_points = detected_entities["zombie"][0]
-            zombie_center = [
-                (nearest[2] - nearest[0]) // 2 + nearest[0],
-                (nearest[3] - nearest[1]) // 2 + nearest[1],
-            ]
+            zombie_center = (
+                int((nearest[2] - nearest[0]) // 2 + nearest[0]),
+                int((nearest[3] - nearest[1]) // 2 + nearest[1]),
+            )
 
             rel_move = [
                 zombie_center[0] - pointer_center[0],

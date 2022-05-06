@@ -1,3 +1,7 @@
 **/__pycache__/
 **.egg-info
 venv/
+capture_output.png
+capture.png
+*.h5
+.vscode/settings.json
