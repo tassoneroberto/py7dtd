@@ -20,7 +20,21 @@ git clone git@github.com:tassoneroberto/py7dtd.git
 cd py7dtd
 py -3.7 -m venv venv
 .\venv\Scripts\Activate.ps1
-py -3.7 -m pip install .
+py -m pip install .[ai]
+```
+
+Note: if you are only interested in the `crack passcode` function you can omit `[ai]` from the above command:
+
+```bash
+py -m pip install -e .[ai]
+```
+
+### Dev mode
+
+To install the package in edit mode (for developers) specify `-e`:
+
+```bash
+py -m pip install .[ai]
 ```
 
 ### Dependencies for entities detection
