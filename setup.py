@@ -11,6 +11,7 @@ setup(
     long_description=open("README.md", encoding='utf8').read(),
     install_requires=[
         "pywin32==304",
+        "pyWinhook==1.6.2"
     ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",

@@ -88,8 +88,16 @@ Simple aim bot capable of:
 ### Usage
 
 ```bash
-py7dtd_auto_shooting
+py7dtd_auto_shooting --delay 200
 ```
+
+### Command line arguments
+
+The following table is listing all the arguments that can be specified:
+
+| arg           |  description      |   default   |
+|:-------------:|:-----------------:| :----------:|
+| delay         | Time in ms between each screenshot | `500`|
 
 ![detection](preview/preview2.png)
 

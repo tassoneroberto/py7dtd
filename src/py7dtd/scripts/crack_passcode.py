@@ -10,10 +10,9 @@ from itertools import product
 import win32com.client as comclt
 import win32gui
 from py7dtd.io.commands_controller import MoveMouseAbsolute, RightMouseClick
-from py7dtd.io.stop_watcher import Keystroke_Watcher
+from py7dtd.io.key_watcher import KeyWatcher
 
 logging.getLogger(__name__)
-
 logging.root.setLevel(logging.INFO)
 
 
@@ -57,9 +56,9 @@ class CrackPasscode(object):
         MoveMouseAbsolute(pointer_center[0], pointer_center[1])
 
     def start(self):
-
-        stop_watcher = threading.Thread(target=self.watch_keys, args=())
-        stop_watcher.start()
+        self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
+        self.watcher_thread.setDaemon(True) # kill it when main thread terminates
+        self.watcher_thread.start()
 
         self.tries = 0
         self.start_time = time.time()
@@ -69,6 +68,8 @@ class CrackPasscode(object):
 
         if self.args.dict:
             self.crack_dict()
+
+        logging.info("Crack passcode stopped")
 
     def crack_brute(self):
         allowed_chars = []
@@ -80,16 +81,18 @@ class CrackPasscode(object):
             allowed_chars += string.ascii_uppercase
         if self.args.special:
             allowed_chars += string.punctuation
-            # FIXME: the following characters can not be sent as an input using ctypes.windll.user32.SendInput
+            # FIXME: the following characters can not be sent
             allowed_chars.remove("(")
             allowed_chars.remove(")")
             allowed_chars.remove("{")
             allowed_chars.remove("}")
+            allowed_chars.remove("~")
 
         if allowed_chars.count == 0:
             logging.error(
                 "Error: empty characters set. Please specify at least one of [digits, lower, upper, special]"
             )
+            return
 
         for length in range(self.args.min, self.args.max + 1):
             to_attempt = product(allowed_chars, repeat=length)
@@ -104,7 +107,8 @@ class CrackPasscode(object):
                 time.sleep(self.delay)
 
                 self.tries += 1
-                self.check_stopped()
+                if self.check_stopped():
+                    return
 
     def crack_dict(self):
         with open(self.args.dictpath, "r") as dict_file:
@@ -118,26 +122,28 @@ class CrackPasscode(object):
                 time.sleep(self.delay)
 
                 self.tries += 1
-                self.check_stopped()
+                if self.check_stopped():
+                    return
 
     def stop(self):
         self.stopped = True
 
     def check_stopped(self):
         if self.args.limit and self.tries >= self.args.limit:
-            logging.info("Stopped: max tries reached (" + str(self.args.limit) + ")")
-            # self.watcher.shutdown()
-            exit()
+            logging.info(
+                "Max tries reached (" + str(self.args.limit) + "). Stopping..."
+            )
+            self.watcher.shutdown()
+            return True
         if self.args.timeout and time.time() - self.start_time >= self.args.timeout:
-            logging.info("Stopped: timeout (" + str(self.args.timeout) + "s)")
-            # self.watcher.shutdown()
-            exit()
+            logging.info("Timeout (" + str(self.args.timeout) + "s). Stopping...")
+            self.watcher.shutdown()
+            return True
         if self.stopped:
-            logging.info("Stopped: detected ESC key pressed")
-            exit()
+            return True
 
     def watch_keys(self):
-        self.watcher = Keystroke_Watcher(stop_func=self.stop)
+        self.watcher = KeyWatcher(stop_func=self.stop)
         self.watcher.start()
 
 
