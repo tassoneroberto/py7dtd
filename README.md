@@ -55,11 +55,11 @@ You can download it at this page: <https://www.python.org/downloads/windows/>
 
 Download link: <https://www.python.org/ftp/python/3.7.9/python-3.7.9-amd64.exe>
 
-You also need to download the trained model (<https://github.com/tassoneroberto/py7dtd/releases/download/v0.2/model.h5>) for the entities detection and put it in `src/ai/models/v2/model.h5`.
+You also need to download the trained model (<https://github.com/tassoneroberto/py7dtd/releases/download/v0.2/model.h5>) for the entities detection and move it to `src/ai/models/v2/`.
 
 ### Optional
 
-To be able to train a model you need to download the `ImageAI`'s pre-trained model (<https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/pretrained-yolov3.h5>) and put it in `./src/ai/`.
+To be able to train a model you need to download the `ImageAI`'s pre-trained model (<https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/pretrained-yolov3.h5>) and move it to `./src/ai/`.
 
 ## Entities detection
 
@@ -117,6 +117,12 @@ Note: Press `ESC` to interrupt the script.
 py7dtd_crack_passcode --brute --digits --lower --min 1 --max 10 --delay 20 --limit 100 --timeout 60
 ```
 
+Get the arguments list with the `help` function:
+
+```bash
+py7dtd_crack_passcode --help
+```
+
 ![detection](preview/bruteforce-preview.gif)
 
 Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
@@ -137,6 +143,7 @@ The following table is listing all the arguments to use for each method:
 
 | arg           |  description      |   default   | type     |
 |:-------------:|:-----------------:| :----------:|:--------:|
+| help          | Arguments description           | `NA`|`NA`|
 | min           | Minimum length                  | `1`|`brute`|
 | max           | Maximum length                  | `20`|`brute`|
 | digits        | Include digits                  | `False`**|`brute`|

@@ -3,7 +3,6 @@
 import argparse
 import logging
 import string
-import threading
 import time
 from itertools import product
 
@@ -56,9 +55,8 @@ class CrackPasscode(object):
         MoveMouseAbsolute(pointer_center[0], pointer_center[1])
 
     def start(self):
-        self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
-        self.watcher_thread.setDaemon(True) # kill it when main thread terminates
-        self.watcher_thread.start()
+        self.key_watcher = KeyWatcher(stop_func=self.stop)
+        self.key_watcher.start()
 
         self.tries = 0
         self.start_time = time.time()
@@ -98,14 +96,7 @@ class CrackPasscode(object):
             to_attempt = product(allowed_chars, repeat=length)
 
             for attempt in to_attempt:
-                time.sleep(self.delay)
-                RightMouseClick()
-                time.sleep(self.delay)
-                self.wsh.SendKeys("".join(attempt))
-                time.sleep(self.delay)
-                self.wsh.SendKeys("~")
-                time.sleep(self.delay)
-
+                self.inject_string("".join(attempt))
                 self.tries += 1
                 if self.check_stopped():
                     return
@@ -113,17 +104,19 @@ class CrackPasscode(object):
     def crack_dict(self):
         with open(self.args.dictpath, "r") as dict_file:
             for line in dict_file:
-                time.sleep(self.delay)
-                RightMouseClick()
-                time.sleep(self.delay)
-                self.wsh.SendKeys(line.strip())
-                time.sleep(self.delay)
-                self.wsh.SendKeys("~")
-                time.sleep(self.delay)
-
+                self.inject_string(line.strip())
                 self.tries += 1
                 if self.check_stopped():
                     return
+
+    def inject_string(self, attempt):
+        time.sleep(self.delay)
+        RightMouseClick()
+        time.sleep(self.delay)
+        self.wsh.SendKeys(attempt)
+        time.sleep(self.delay)
+        self.wsh.SendKeys("~")
+        time.sleep(self.delay)
 
     def stop(self):
         self.stopped = True
@@ -133,22 +126,16 @@ class CrackPasscode(object):
             logging.info(
                 "Max tries reached (" + str(self.args.limit) + "). Stopping..."
             )
-            self.watcher.shutdown()
+            self.key_watcher.shutdown()
             return True
         if self.args.timeout and time.time() - self.start_time >= self.args.timeout:
             logging.info("Timeout (" + str(self.args.timeout) + "s). Stopping...")
-            self.watcher.shutdown()
+            self.key_watcher.shutdown()
             return True
         if self.stopped:
             return True
 
-    def watch_keys(self):
-        self.watcher = KeyWatcher(stop_func=self.stop)
-        self.watcher.start()
-
-
-def main():
-
+def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--limit", default=None, help="Maximum number of tries", type=int
@@ -203,13 +190,16 @@ def main():
     )
     parser.add_argument("--dictpath", help="Dictionary file path", type=str)
 
+    return parser
+
+def main():
+    parser = get_argument_parser()
     args = parser.parse_args()
 
     crack_passcode = CrackPasscode(args)
     crack_passcode.select_window()
     crack_passcode.center_mouse()
     crack_passcode.start()
-
 
 if __name__ == "__main__":
     main()

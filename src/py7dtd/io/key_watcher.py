@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
+import threading
 from pyWinhook import HookManager
 from win32gui import PumpMessages, PostQuitMessage
 import logging
 
 logging.getLogger(__name__)
-
 logging.root.setLevel(logging.INFO)
 
 
@@ -26,9 +26,11 @@ class KeyWatcher(object):
             return True
 
     def start(self):
-        PumpMessages()
+        self.watcher_thread = threading.Thread(target=PumpMessages, args=())
+        self.watcher_thread.setDaemon(True) # kill it when main thread terminates
+        self.watcher_thread.start()
 
     def shutdown(self):
-        PostQuitMessage(0)
+        PostQuitMessage(0)  
         self.hm.UnhookKeyboard()
         logging.info("Key watcher stopped")
