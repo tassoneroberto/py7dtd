@@ -109,12 +109,14 @@ Bruteforce/dictionary attack on chests/doors passcode.
 
 ### Usage
 
-Example of a bruteforce attack testing passcodes of 2-10 characters length, with a delay of 20ms between each try and a limit of 100 tries.
+It is recommended to set the game in window mode with a resolution of 640x480.
+
+Example of a bruteforce attack testing passcodes of 2-10 characters length composed of digits and lowercase characters, with a delay of 20ms between each try, a limit of 100 tries and a timeout of 60 seconds.
 
 Note: Press `ESC` to interrupt the script.
 
 ```bash
-py7dtd_crack_passcode --brute --digits --lower --min 1 --max 10 --delay 20 --limit 100 --timeout 60
+py7dtd_crack_passcode --brute --digits --lower --min 2 --max 10 --delay 20 --limit 100 --timeout 60
 ```
 
 Get the arguments list with the `help` function:
@@ -128,7 +130,7 @@ py7dtd_crack_passcode --help
 Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
 
 ```bash
-py7dtd_crack_passcode --dict --dictpath passwords.txt --delay 30
+py7dtd_crack_passcode --dict --dictpath ./top1000.txt --delay 30
 ```
 
 Note: dictionaries can be found at <https://github.com/danielmiessler/SecLists/tree/master/Passwords>.
@@ -150,7 +152,7 @@ The following table is listing all the arguments to use for each method:
 | lower         | Include lowercase characters    | `False`**|`brute`|
 | upper         | Include uppercase characters    | `False`**|`brute`|
 | special       | Include special characters      | `False`**|`brute`|
-| dictpath      | Dictionary file path            | `None`|`dict`*|
+| dictpath      | Dictionary file path            | `top1000.txt`|`dict`*|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
 | timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
 | delay         | Delay in ms between each action | `20`|`brute`, `dict`|

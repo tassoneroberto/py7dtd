@@ -5,6 +5,7 @@ import logging
 import string
 import time
 from itertools import product
+from PIL import ImageGrab
 
 import win32com.client as comclt
 import win32gui
@@ -48,11 +49,11 @@ class CrackPasscode(object):
         self.dimensions = win32gui.GetWindowRect(hwnd)
 
     def center_mouse(self):
-        pointer_center = [
+        self.pointer_center = [
             (self.dimensions[2] - self.dimensions[0]) // 2 + self.dimensions[0],
             (self.dimensions[3] - self.dimensions[1]) // 2 + self.dimensions[1] + 20,
         ]
-        MoveMouseAbsolute(pointer_center[0], pointer_center[1])
+        MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
 
     def start(self):
         self.key_watcher = KeyWatcher(stop_func=self.stop)
@@ -97,7 +98,6 @@ class CrackPasscode(object):
 
             for attempt in to_attempt:
                 self.inject_string("".join(attempt))
-                self.tries += 1
                 if self.check_stopped():
                     return
 
@@ -105,7 +105,6 @@ class CrackPasscode(object):
         with open(self.args.dictpath, "r") as dict_file:
             for line in dict_file:
                 self.inject_string(line.strip())
-                self.tries += 1
                 if self.check_stopped():
                     return
 
@@ -117,9 +116,27 @@ class CrackPasscode(object):
         time.sleep(self.delay)
         self.wsh.SendKeys("~")
         time.sleep(self.delay)
+        
+        if self.passcode_found():
+            logging.info("Passcode found: " + attempt)
+            self.stop()
+        else:
+            self.tries += 1
 
     def stop(self):
         self.stopped = True
+
+    def passcode_found(self):
+        image = ImageGrab.grab(
+            (
+                self.pointer_center[0],
+                self.pointer_center[1] + 6,
+                self.pointer_center[0] + 1,
+                self.pointer_center[1] + 7,
+            )
+        )
+        pixel_color = image.getcolors()[0][1]
+        return pixel_color != (96, 96, 96)
 
     def check_stopped(self):
         if self.args.limit and self.tries >= self.args.limit:
@@ -188,7 +205,7 @@ def get_argument_parser():
     parser.add_argument(
         "--dict", default=False, help="Dictionary attack", action="store_true"
     )
-    parser.add_argument("--dictpath", help="Dictionary file path", type=str)
+    parser.add_argument("--dictpath", default="./top1000.txt", help="Dictionary file path", type=str)
 
     return parser
 
