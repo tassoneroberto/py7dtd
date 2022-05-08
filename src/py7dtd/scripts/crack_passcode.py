@@ -205,7 +205,7 @@ def get_argument_parser():
     parser.add_argument(
         "--dict", default=False, help="Dictionary attack", action="store_true"
     )
-    parser.add_argument("--dictpath", default="./top1000.txt", help="Dictionary file path", type=str)
+    parser.add_argument("--dictpath", default="./dictionaries/top1000.txt", help="Dictionary file path", type=str)
 
     return parser
 

@@ -130,7 +130,7 @@ py7dtd_crack_passcode --help
 Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
 
 ```bash
-py7dtd_crack_passcode --dict --dictpath ./top1000.txt --delay 30
+py7dtd_crack_passcode --dict --dictpath ./dictionaries/top1000.txt --delay 30
 ```
 
 Note: dictionaries can be found at <https://github.com/danielmiessler/SecLists/tree/master/Passwords>.
