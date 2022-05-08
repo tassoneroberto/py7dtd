@@ -12,7 +12,7 @@ setup(
     install_requires=[
         "pywin32==304",
         "pyWinhook==1.6.2",
-        "pillow==7.0.0"
+        "pillow==9.0.1"
     ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
