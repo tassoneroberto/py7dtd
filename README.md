@@ -10,6 +10,7 @@ In this repository are collected tools and scripts for the game 7 Days to Die:
 - Scripts for the automatization of actions (mining, crafting, etc.)
 - Aim bots
 - Passcode cracking
+- Block detection
 
 ## Installation (Windows)
 
@@ -91,13 +92,17 @@ Simple aim bot capable of:
 py7dtd_auto_shooting --delay 200
 ```
 
+Note: Press `ESC` to interrupt the bot.
+
 ### Command line arguments
 
 The following table is listing all the arguments that can be specified:
 
 | arg           |  description      |   default   |
 |:-------------:|:-----------------:| :----------:|
+| help          | Arguments description           | `NA`|
 | delay         | Time in ms between each screenshot | `500`|
+| output         | Output folder | `./auto_shooting`|
 
 ![detection](preview/preview2.png)
 
@@ -113,7 +118,7 @@ It is recommended to set the game in window mode with a resolution of 640x480.
 
 Example of a bruteforce attack testing passcodes of 2-10 characters length composed of digits and lowercase characters, with a delay of 20ms between each try, a limit of 100 tries and a timeout of 60 seconds.
 
-Note: Press `ESC` to interrupt the script.
+Note: Press `ESC` to interrupt the bot.
 
 ```bash
 py7dtd_crack_passcode --brute --digits --lower --min 2 --max 10 --delay 20 --limit 100 --timeout 60
@@ -152,11 +157,55 @@ The following table is listing all the arguments to use for each method:
 | lower         | Include lowercase characters    | `False`**|`brute`|
 | upper         | Include uppercase characters    | `False`**|`brute`|
 | special       | Include special characters      | `False`**|`brute`|
-| dictpath      | Dictionary file path            | `top1000.txt`|`dict`*|
+| dictpath      | Dictionary file path            | `./dictionaries/top1000.txt`|`dict`*|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
 | timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
 | delay         | Delay in ms between each action | `20`|`brute`, `dict`|
 
 **This attribute is required if `dict` is selected*
+
+***At least one of these is required*
+
+## Blocks detection
+
+❗ Under development ❗
+
+Detection of block, like `topsoil` and `destroyed stone` blocks, by taking screenshots of the map.
+
+### Usage
+
+It is recommended to set the game in window mode with the highest resolution possible.
+
+Specify the blocks to be identified by passing them as arguments (e.g. `--topsoil`). Specify an output folder (or keep the default one `./blocks_detection`). Run the script and open the game map by pressing `M`. Press `P` to take a screenshot of the map and automatically mark in red the specified blocks. The screenshots, with the block marked, will be saved in the output folder.
+
+Note: Press `ESC` to interrupt the script.
+
+```bash
+py7dtd_block_detection --topsoil --destroyed
+```
+
+Get the arguments list with the `help` function:
+
+```bash
+py7dtd_block_detection --help
+```
+
+Example of detection of topsoil blocks in the desert biome:
+
+![detection](preview/blockdetection-before-preview.png)
+
+![detection](preview/blockdetection-after-preview.png)
+
+### Command line arguments
+
+
+The following table is listing all the arguments:
+
+| arg           |  description      |   default   |
+|:-------------:|:-----------------:| :----------:|
+| help          | Arguments description           | `NA`|
+| topsoil           | Detect topsoil blocks     | `False`|
+| destroyed           | Detect destroyed stone blocks     | `False`|
+| output         | Output folder | `./blocks_detection`|
 
 ***At least one of these is required*

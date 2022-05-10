@@ -62,17 +62,21 @@ class BlocksDetection(object):
         pixels = image.load()
         for x in range(0, self.dimensions[2] - self.dimensions[0]):
             for y in range(0, self.dimensions[3] - self.dimensions[1]):
-                # TODO add destroyed stone detection
+                # FIXME adjust precision
                 if self.args.destroyed:
-                    pass
-                if self.args.topsoil:
-                    # FIXME adjust precision
                     if (
-                        pixels[x, y][0] >= 12 and pixels[x, y][0] <= 16 and
-                        pixels[x, y][1] >= 40 and pixels[x, y][1] <= 49 and
-                        pixels[x, y][2] >= 12 and pixels[x, y][2] <= 23
+                        pixels[x, y][0] >= 125 and pixels[x, y][0] <= 125 and
+                        pixels[x, y][1] >= 125 and pixels[x, y][1] <= 125 and
+                        pixels[x, y][2] >= 54 and pixels[x, y][2] <= 54
+                    ):  # destroyed stone
+                        pixels[x, y] = (255, 0, 0)  # mark it red
+                if self.args.topsoil:
+                    if (
+                        pixels[x, y][0] >= 12 and pixels[x, y][0] <= 19 and
+                        pixels[x, y][1] >= 40 and pixels[x, y][1] <= 53 and
+                        pixels[x, y][2] >= 19 and pixels[x, y][2] <= 19
                     ):  # topsoil
-                        pixels[x, y] = (255, 0, 0)  # mark it RED
+                        pixels[x, y] = (255, 0, 0)  # mark it red
 
         filename = str(datetime.datetime.now().strftime(
             "%Y%m%d-%I%M%S%f")) + ".png"
