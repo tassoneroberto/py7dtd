@@ -198,14 +198,13 @@ Example of detection of topsoil blocks in the desert biome:
 
 ### Command line arguments
 
-
 The following table is listing all the arguments:
 
-| arg           |  description      |   default   |
-|:-------------:|:-----------------:| :----------:|
-| help          | Arguments description           | `NA`|
-| topsoil           | Detect topsoil blocks     | `False`|
-| destroyed           | Detect destroyed stone blocks     | `False`|
-| output         | Output folder | `./blocks_detection`|
+| arg           |  description              |   default   |
+|:-------------:|:-------------------------:| :----------:|
+| help          | Arguments description     | `NA`        |
+| topsoil       | Topsoil blocks            | `False`*   |
+| destroyed     | Destroyed stone blocks    | `False`*   |
+| output        | Output folder             | `./blocks_detection`|
 
-***At least one of these is required*
+**At least one of these is required*
