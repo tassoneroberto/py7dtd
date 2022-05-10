@@ -181,13 +181,13 @@ Specify the blocks to be identified by passing them as arguments (e.g. `--topsoi
 Note: Press `ESC` to interrupt the script.
 
 ```bash
-py7dtd_block_detection --topsoil --destroyed
+py7dtd_blocks_detection --topsoil --destroyed
 ```
 
 Get the arguments list with the `help` function:
 
 ```bash
-py7dtd_block_detection --help
+py7dtd_blocks_detection --help
 ```
 
 Example of detection of topsoil blocks in the desert biome:
