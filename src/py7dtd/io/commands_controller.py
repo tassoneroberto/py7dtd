@@ -60,7 +60,8 @@ def PressKey(hexKeyCode):
 def ReleaseKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra))
+    ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002,
+                        0, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(1), ii_)
     sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
@@ -80,18 +81,24 @@ def MoveMouseRel(x, y):
 
 
 def LeftMouseClick():
-    mouseEvent(0x2, 0, 0, 0, 0)  # Mouse LClick Down, relative coords, dx=0, dy=0
-    mouseEvent(0x4, 0, 0, 0, 0)  # Mouse LClick Up, relative coords, dx=0, dy=0
+    # Mouse LClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x2, 0, 0, 0, 0)
+    # Mouse LClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x4, 0, 0, 0, 0)
 
 
 def RightMouseClick():
-    mouseEvent(0x8, 0, 0, 0, 0)  # Mouse RClick Down, relative coords, dx=0, dy=0
-    mouseEvent(0x10, 0, 0, 0, 0)  # Mouse RClick Up, relative coords, dx=0, dy=0
+    # Mouse RClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x8, 0, 0, 0, 0)
+    # Mouse RClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x10, 0, 0, 0, 0)
 
 
 def MiddleMouseClick():
-    mouseEvent(0x20, 0, 0, 0, 0)  # Mouse MClick Down, relative coords, dx=0, dy=0
-    mouseEvent(0x40, 0, 0, 0, 0)  # Mouse MClick Up, relative coords, dx=0, dy=0
+    # Mouse MClick Down, relative coords, dx=0, dy=0
+    mouseEvent(0x20, 0, 0, 0, 0)
+    # Mouse MClick Up, relative coords, dx=0, dy=0
+    mouseEvent(0x40, 0, 0, 0, 0)
 
 
 # directx codes http://www.gamespp.com/directx/directInputKeyboardScanCodes.html

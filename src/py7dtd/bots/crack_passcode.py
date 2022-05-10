@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
 import argparse
+from cmath import e
 import logging
 import string
+import threading
 import time
 from itertools import product
 from PIL import ImageGrab
 
 import win32com.client as comclt
-import win32gui
 from py7dtd.io.commands_controller import MoveMouseAbsolute, RightMouseClick
 from py7dtd.io.key_watcher import KeyWatcher
+from py7dtd.io.window_handler import select_window, get_absolute_window_center
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
@@ -41,23 +43,29 @@ class CrackPasscode(object):
 
         self.delay = self.args.delay / 1000
 
-    def select_window(self):
-        self.wsh = comclt.Dispatch("WScript.Shell")
-        self.wsh.AppActivate("7 Days To Die")
-        hwnd = win32gui.FindWindow(None, r"7 Days to Die")
-        win32gui.SetForegroundWindow(hwnd)
-        self.dimensions = win32gui.GetWindowRect(hwnd)
-
-    def center_mouse(self):
-        self.pointer_center = [
-            (self.dimensions[2] - self.dimensions[0]) // 2 + self.dimensions[0],
-            (self.dimensions[3] - self.dimensions[1]) // 2 + self.dimensions[1] + 20,
-        ]
-        MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
+    def watch_keys(self):
+        self.watcher = KeyWatcher(stop_func=self.stop)
+        self.watcher.start()
 
     def start(self):
-        self.key_watcher = KeyWatcher(stop_func=self.stop)
-        self.key_watcher.start()
+        # Select the application window
+        try:
+            self.dimensions = select_window()
+        except Exception as err:
+            logging.error(str(err))
+            return
+        self.pointer_center = get_absolute_window_center(self.dimensions)
+        MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
+
+        # Spawn the keywatcher thread
+        self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
+        # Daemon = True -> kill it when main thread terminates
+        self.watcher_thread.setDaemon(True)
+        self.watcher_thread.start()
+
+        # Init win32com to inject keys
+        self.wsh = comclt.Dispatch("WScript.Shell")
+        self.wsh.AppActivate("7 Days To Die")
 
         self.tries = 0
         self.start_time = time.time()
@@ -116,7 +124,7 @@ class CrackPasscode(object):
         time.sleep(self.delay)
         self.wsh.SendKeys("~")
         time.sleep(self.delay)
-        
+
         if self.passcode_found():
             logging.info("Passcode found: " + attempt)
             self.stop()
@@ -146,11 +154,13 @@ class CrackPasscode(object):
             self.key_watcher.shutdown()
             return True
         if self.args.timeout and time.time() - self.start_time >= self.args.timeout:
-            logging.info("Timeout (" + str(self.args.timeout) + "s). Stopping...")
+            logging.info(
+                "Timeout (" + str(self.args.timeout) + "s). Stopping...")
             self.key_watcher.shutdown()
             return True
         if self.stopped:
             return True
+
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
@@ -205,18 +215,21 @@ def get_argument_parser():
     parser.add_argument(
         "--dict", default=False, help="Dictionary attack", action="store_true"
     )
-    parser.add_argument("--dictpath", default="./dictionaries/top1000.txt", help="Dictionary file path", type=str)
+    parser.add_argument("--dictpath", default="./dictionaries/top1000.txt",
+                        help="Dictionary file path", type=str)
 
     return parser
+
 
 def main():
     parser = get_argument_parser()
     args = parser.parse_args()
 
     crack_passcode = CrackPasscode(args)
-    crack_passcode.select_window()
-    crack_passcode.center_mouse()
     crack_passcode.start()
+
+    logging.info("Process terminated.")
+
 
 if __name__ == "__main__":
     main()

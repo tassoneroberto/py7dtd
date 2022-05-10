@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+from email import message
+import win32com.client as comclt
+import win32gui
+
+import logging
+
+logging.getLogger(__name__)
+logging.root.setLevel(logging.INFO)
+
+
+def select_window(window_name="7 Days to Die"):
+    hwnd = win32gui.FindWindow(None, r"{}".format(window_name))
+    if hwnd == 0:
+        raise Exception(f"Application {window_name} not detected.")
+    win32gui.SetForegroundWindow(hwnd)
+    dimensions = win32gui.GetWindowRect(hwnd)
+    width = dimensions[2] - dimensions[0]
+    height = dimensions[3] - dimensions[1]
+    logging.info(
+        f"Application {window_name} [{width}x{height}] detected successfully.")
+    return dimensions
+
+
+def get_relative_window_center(dimensions):
+    return [
+        (dimensions[2] - dimensions[0]
+         ) // 2,
+        (dimensions[3] - dimensions[1]
+         ) // 2,
+    ]
+
+
+def get_absolute_window_center(dimensions):
+    return [
+        (dimensions[2] - dimensions[0]
+         ) // 2 + dimensions[0],
+        (dimensions[3] - dimensions[1]
+         ) // 2 + dimensions[1] + 20,
+    ]

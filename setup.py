@@ -29,8 +29,9 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "py7dtd_crack_passcode = py7dtd.scripts.crack_passcode:main",
+            "py7dtd_crack_passcode = py7dtd.bots.crack_passcode:main",
             "py7dtd_auto_shooting = py7dtd.bots.auto_shooting:main",
+            "py7dtd_blocks_detection = py7dtd.scripts.blocks_detection:main",
         ],
     },
 )

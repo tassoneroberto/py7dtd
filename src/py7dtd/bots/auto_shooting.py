@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 
 import argparse
+import datetime
 import logging
 import os
+import threading
 import time
 from ctypes import windll
 from pathlib import Path
 
 import tensorflow as tf
-import win32gui
 from imageai.Detection.Custom import CustomObjectDetection
 from PIL import ImageGrab
 from py7dtd.io.commands_controller import (
     LeftMouseClick,
-    MoveMouseAbsolute,
     MoveMouseRel,
 )
-# from py7dtd.io.key_watcher import KeyWatcher
+from py7dtd.io.key_watcher import KeyWatcher
+from py7dtd.io.window_handler import select_window, get_relative_window_center
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
@@ -26,15 +27,11 @@ class AutoShooting(object):
     def __init__(self, args):
         self.stopped = False
         self.args = args
+        self.init_args()
 
         # Adjust DPI
         user32 = windll.user32
         user32.SetProcessDPIAware()
-
-        # Select the application window
-        hwnd = win32gui.FindWindow(None, r"7 Days to Die")
-        win32gui.SetForegroundWindow(hwnd)
-        self.dimensions = win32gui.GetWindowRect(hwnd)
 
         # Fix to prevent the full GPU memory issue
         config = tf.compat.v1.ConfigProto()
@@ -45,7 +42,8 @@ class AutoShooting(object):
         self.detector = CustomObjectDetection()
         self.detector.setModelTypeAsYOLOv3()
         model_path = os.path.join(
-            Path(os.path.dirname(__file__)).parent, Path("ai/models/v2/model.h5")
+            Path(os.path.dirname(__file__)).parent, Path(
+                "ai/models/v2/model.h5")
         )
         model_json_path = os.path.join(
             Path(os.path.dirname(__file__)).parent,
@@ -55,33 +53,50 @@ class AutoShooting(object):
         self.detector.setJsonPath(model_json_path)
         self.detector.loadModel()
 
-        self.pointer_center = [
-            (self.dimensions[2] - self.dimensions[0]) // 2,
-            (self.dimensions[3] - self.dimensions[1]) // 2,
-        ]
+    def init_args(self):
+        self.input_file = os.path.join(self.args.output, "input.png")
+        self.output_file = os.path.join(self.args.output, "output.png")
+
+        if not os.path.exists(self.args.output):
+            os.makedirs(self.args.output)
+            logging.info(f"Folder {self.args.output} created successfully.")
+
+    def watch_keys(self):
+        self.watcher = KeyWatcher(stop_func=self.stop)
+        self.watcher.start()
 
     def start(self):
-        # FIXME: key watcher thread not working
-        # self.key_watcher = KeyWatcher(stop_func=self.stop)
-        # self.key_watcher.start()
+        # Select the application window
+        try:
+            self.dimensions = select_window()
+        except Exception as err:
+            logging.error(str(err))
+            return
+        self.pointer_center = get_relative_window_center(self.dimensions)
+
+        # Spawn the keywatcher thread
+        self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
+        # Daemon = True -> kill it when main thread terminates
+        self.watcher_thread.setDaemon(True)
+        self.watcher_thread.start()
 
         while not self.stopped:
-            print("stopped status: " + str(self.stopped))
             logging.info("Capturing new image...")
             # Capture the frame
             image = ImageGrab.grab(self.dimensions)
-            image.save(f"capture.png")
+            image.save(self.input_file)
             # Objects detection
             detections = self.detector.detectObjectsFromImage(
-                input_image="capture.png",
-                output_image_path="capture_output.png",
+                input_image=self.input_file,
+                output_image_path=self.output_file,
                 minimum_percentage_probability=70,
             )
             detected_entities = {}
             for detection in detections:
                 if detection["name"] not in detected_entities:
                     detected_entities[detection["name"]] = []
-                detected_entities[detection["name"]].append(detection["box_points"])
+                detected_entities[detection["name"]].append(
+                    detection["box_points"])
 
             logging.info(f"Detected Entities: {detected_entities}")
 
@@ -89,7 +104,8 @@ class AutoShooting(object):
             if "zombie" in detected_entities:
                 nearest = detected_entities["zombie"][0]
                 if len(detected_entities["zombie"]) > 1:
-                    nearest_area = (nearest[2] - nearest[0]) * (nearest[3] - nearest[1])
+                    nearest_area = (
+                        nearest[2] - nearest[0]) * (nearest[3] - nearest[1])
                     for current in detected_entities["zombie"]:
                         current_area = (current[2] - current[0]) * (
                             current[3] - current[1]
@@ -118,13 +134,18 @@ class AutoShooting(object):
     def stop(self):
         self.stopped = True
 
+
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--delay", default=500, help="Time in ms between each screenshot", type=int
     )
-    
+    parser.add_argument(
+        "--output", default="auto_shooting", help="Output folder", type=str
+    )
+
     return parser
+
 
 def main():
     parser = get_argument_parser()
