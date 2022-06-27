@@ -62,7 +62,8 @@ class BlocksDetection(object):
         pixels = image.load()
         for x in range(0, self.dimensions[2] - self.dimensions[0]):
             for y in range(0, self.dimensions[3] - self.dimensions[1]):
-                # FIXME adjust precision
+                # FIXME: adjust precision
+                # https://github.com/tassoneroberto/py7dtd/issues/18
                 if self.args.destroyed:
                     if (
                         pixels[x, y][0] >= 125 and pixels[x, y][0] <= 125 and

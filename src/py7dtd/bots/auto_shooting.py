@@ -123,7 +123,8 @@ class AutoShooting(object):
                 ]
 
                 logging.info(f"Shooting at zombie in: {zombie_center}")
-                # TODO: Fix the precision of mouse relative movement
+                # FIXME: the precision of mouse relative movement
+                # https://github.com/tassoneroberto/py7dtd/issues/19
                 MoveMouseRel(rel_move[0], rel_move[1])
                 LeftMouseClick()
 

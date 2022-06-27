@@ -89,6 +89,7 @@ class CrackPasscode(object):
         if self.args.special:
             allowed_chars += string.punctuation
             # FIXME: the following characters can not be sent
+            # https://github.com/tassoneroberto/py7dtd/issues/17
             allowed_chars.remove("(")
             allowed_chars.remove(")")
             allowed_chars.remove("{")
