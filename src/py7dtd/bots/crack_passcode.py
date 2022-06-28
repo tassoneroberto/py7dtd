@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 
 import argparse
-from cmath import e
 import logging
 import string
 import threading
 import time
 from itertools import product
-from PIL import ImageGrab
 
 import win32com.client as comclt
+from PIL import ImageGrab
 from py7dtd.io.commands_controller import MoveMouseAbsolute, RightMouseClick
 from py7dtd.io.key_watcher import KeyWatcher
-from py7dtd.io.window_handler import select_window, get_absolute_window_center
+from py7dtd.io.window_handler import get_absolute_window_center, select_window
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
@@ -27,7 +26,8 @@ class CrackPasscode(object):
     def init_args(self):
         if self.args.brute and self.args.dict:
             logging.error(
-                "Error: only one method can be selected. Available are: `brute`, `dict`."
+                "Error: only one method can be selected."
+                + "Available are: `brute`, `dict`."
             )
             exit()
 
@@ -37,7 +37,9 @@ class CrackPasscode(object):
 
         if not self.args.brute and not self.args.dict:
             logging.warning(
-                "Warning: a method has not been selected. Available are: `brute`, `dict`.\n`brute` has been selected by default."
+                "Warning: a method has not been selected."
+                + "Available are: `brute`, `dict`."
+                + "`brute` has been selected by default."
             )
             self.args.brute = True
 
@@ -98,7 +100,9 @@ class CrackPasscode(object):
 
         if allowed_chars.count == 0:
             logging.error(
-                "Error: empty characters set. Please specify at least one of [digits, lower, upper, special]"
+                "Error: empty characters set."
+                + "Please specify at least one of: "
+                + "[digits, lower, upper, special]"
             )
             return
 
@@ -154,9 +158,13 @@ class CrackPasscode(object):
             )
             self.key_watcher.shutdown()
             return True
-        if self.args.timeout and time.time() - self.start_time >= self.args.timeout:
+        if (
+            self.args.timeout
+            and time.time() - self.start_time >= self.args.timeout
+        ):
             logging.info(
-                "Timeout (" + str(self.args.timeout) + "s). Stopping...")
+                "Timeout (" + str(self.args.timeout) + "s). Stopping..."
+            )
             self.key_watcher.shutdown()
             return True
         if self.stopped:
@@ -216,8 +224,12 @@ def get_argument_parser():
     parser.add_argument(
         "--dict", default=False, help="Dictionary attack", action="store_true"
     )
-    parser.add_argument("--dictpath", default="./dictionaries/top1000.txt",
-                        help="Dictionary file path", type=str)
+    parser.add_argument(
+        "--dictpath",
+        default="./dictionaries/top1000.txt",
+        help="Dictionary file path",
+        type=str,
+    )
 
     return parser
 

@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-from email import message
-import win32com.client as comclt
-import win32gui
-
 import logging
+
+import win32gui
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
@@ -19,23 +17,20 @@ def select_window(window_name="7 Days to Die"):
     width = dimensions[2] - dimensions[0]
     height = dimensions[3] - dimensions[1]
     logging.info(
-        f"Application {window_name} [{width}x{height}] detected successfully.")
+        f"Application {window_name} [{width}x{height}] detected successfully."
+    )
     return dimensions
 
 
 def get_relative_window_center(dimensions):
     return [
-        (dimensions[2] - dimensions[0]
-         ) // 2,
-        (dimensions[3] - dimensions[1]
-         ) // 2,
+        (dimensions[2] - dimensions[0]) // 2,
+        (dimensions[3] - dimensions[1]) // 2,
     ]
 
 
 def get_absolute_window_center(dimensions):
     return [
-        (dimensions[2] - dimensions[0]
-         ) // 2 + dimensions[0],
-        (dimensions[3] - dimensions[1]
-         ) // 2 + dimensions[1] + 20,
+        (dimensions[2] - dimensions[0]) // 2 + dimensions[0],
+        (dimensions[3] - dimensions[1]) // 2 + dimensions[1] + 20,
     ]

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import threading
-from pyWinhook import HookManager
-from win32gui import PumpMessages, PostQuitMessage
 import logging
+
+from pyWinhook import HookManager
+from win32gui import PostQuitMessage, PumpMessages
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)

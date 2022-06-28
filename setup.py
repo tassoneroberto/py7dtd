@@ -8,12 +8,8 @@ setup(
     license="MIT",
     description="Collection of 7 Days to Die bots, scripts and hacks",
     keywords=["7dtd", "bots", "hacks", "scripts"],
-    long_description=open("README.md", encoding='utf8').read(),
-    install_requires=[
-        "pywin32==304",
-        "pyWinhook==1.6.2",
-        "pillow==7.0.0"
-    ],
+    long_description=open("README.md", encoding="utf8").read(),
+    install_requires=["pywin32==304", "pyWinhook==1.6.2", "pillow==7.0.0"],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
     author_email="roberto.tassone@proton.me",

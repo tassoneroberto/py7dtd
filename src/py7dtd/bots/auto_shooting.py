@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import datetime
 import logging
 import os
 import threading
@@ -12,12 +11,9 @@ from pathlib import Path
 import tensorflow as tf
 from imageai.Detection.Custom import CustomObjectDetection
 from PIL import ImageGrab
-from py7dtd.io.commands_controller import (
-    LeftMouseClick,
-    MoveMouseRel,
-)
+from py7dtd.io.commands_controller import LeftMouseClick, MoveMouseRel
 from py7dtd.io.key_watcher import KeyWatcher
-from py7dtd.io.window_handler import select_window, get_relative_window_center
+from py7dtd.io.window_handler import get_relative_window_center, select_window
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
@@ -36,14 +32,14 @@ class AutoShooting(object):
         # Fix to prevent the full GPU memory issue
         config = tf.compat.v1.ConfigProto()
         config.gpu_options.allow_growth = True
-        sess = tf.compat.v1.Session(config=config)
+        tf.compat.v1.Session(config=config)
 
         # Load the trained imageAi model
         self.detector = CustomObjectDetection()
         self.detector.setModelTypeAsYOLOv3()
         model_path = os.path.join(
-            Path(os.path.dirname(__file__)).parent, Path(
-                "ai/models/v2/model.h5")
+            Path(os.path.dirname(__file__)).parent,
+            Path("ai/models/v2/model.h5"),
         )
         model_json_path = os.path.join(
             Path(os.path.dirname(__file__)).parent,
@@ -96,7 +92,8 @@ class AutoShooting(object):
                 if detection["name"] not in detected_entities:
                     detected_entities[detection["name"]] = []
                 detected_entities[detection["name"]].append(
-                    detection["box_points"])
+                    detection["box_points"]
+                )
 
             logging.info(f"Detected Entities: {detected_entities}")
 
@@ -104,8 +101,9 @@ class AutoShooting(object):
             if "zombie" in detected_entities:
                 nearest = detected_entities["zombie"][0]
                 if len(detected_entities["zombie"]) > 1:
-                    nearest_area = (
-                        nearest[2] - nearest[0]) * (nearest[3] - nearest[1])
+                    nearest_area = (nearest[2] - nearest[0]) * (
+                        nearest[3] - nearest[1]
+                    )
                     for current in detected_entities["zombie"]:
                         current_area = (current[2] - current[0]) * (
                             current[3] - current[1]
@@ -139,7 +137,10 @@ class AutoShooting(object):
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--delay", default=500, help="Time in ms between each screenshot", type=int
+        "--delay",
+        default=500,
+        help="Time in ms between each screenshot",
+        type=int,
     )
     parser.add_argument(
         "--output", default="auto_shooting", help="Output folder", type=str

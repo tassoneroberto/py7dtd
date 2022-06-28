@@ -60,8 +60,9 @@ def PressKey(hexKeyCode):
 def ReleaseKey(hexKeyCode):
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
-    ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008 | 0x0002,
-                        0, ctypes.pointer(extra))
+    ii_.ki = KeyBdInput(
+        0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra)
+    )
     x = Input(ctypes.c_ulong(1), ii_)
     sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
@@ -101,5 +102,6 @@ def MiddleMouseClick():
     mouseEvent(0x40, 0, 0, 0, 0)
 
 
-# directx codes http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+# directx codes at:
+# http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
 # alternative source: https://gist.github.com/tracend/912308

@@ -3,12 +3,11 @@
 import argparse
 import datetime
 import logging
-import string
+import os
 import threading
 import time
-from PIL import ImageGrab
-import os
 
+from PIL import ImageGrab
 from py7dtd.io.key_watcher import KeyWatcher
 from py7dtd.io.window_handler import select_window
 
@@ -25,7 +24,8 @@ class BlocksDetection(object):
     def init_args(self):
         if not self.args.topsoil and not self.args.destroyed:
             logging.error(
-                "Error: No blocks selected. Select at least one of: `topsoil`, `destroyed`."
+                "Error: No blocks selected."
+                + " Select at least one of: `topsoil`, `destroyed`."
             )
             exit()
         if not os.path.exists(self.args.output):
@@ -66,33 +66,48 @@ class BlocksDetection(object):
                 # https://github.com/tassoneroberto/py7dtd/issues/18
                 if self.args.destroyed:
                     if (
-                        pixels[x, y][0] >= 125 and pixels[x, y][0] <= 125 and
-                        pixels[x, y][1] >= 125 and pixels[x, y][1] <= 125 and
-                        pixels[x, y][2] >= 54 and pixels[x, y][2] <= 54
+                        pixels[x, y][0] >= 125
+                        and pixels[x, y][0] <= 125
+                        and pixels[x, y][1] >= 125
+                        and pixels[x, y][1] <= 125
+                        and pixels[x, y][2] >= 54
+                        and pixels[x, y][2] <= 54
                     ):  # destroyed stone
                         pixels[x, y] = (255, 0, 0)  # mark it red
                 if self.args.topsoil:
                     if (
-                        pixels[x, y][0] >= 12 and pixels[x, y][0] <= 19 and
-                        pixels[x, y][1] >= 40 and pixels[x, y][1] <= 53 and
-                        pixels[x, y][2] >= 19 and pixels[x, y][2] <= 19
+                        pixels[x, y][0] >= 12
+                        and pixels[x, y][0] <= 19
+                        and pixels[x, y][1] >= 40
+                        and pixels[x, y][1] <= 53
+                        and pixels[x, y][2] >= 19
+                        and pixels[x, y][2] <= 19
                     ):  # topsoil
                         pixels[x, y] = (255, 0, 0)  # mark it red
 
-        filename = str(datetime.datetime.now().strftime(
-            "%Y%m%d-%I%M%S%f")) + ".png"
+        filename = (
+            str(datetime.datetime.now().strftime("%Y%m%d-%I%M%S%f")) + ".png"
+        )
         image.save(os.path.join(self.args.output, filename))
         logging.info(
-            f"New block detection picture created -> {self.args.output}/{filename}")
+            "New block detection picture created"
+            + f" -> {self.args.output}/{filename}"
+        )
 
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--topsoil", default=False, help="Detect topsoil blocks", action="store_true"
+        "--topsoil",
+        default=False,
+        help="Detect topsoil blocks",
+        action="store_true",
     )
     parser.add_argument(
-        "--destroyed", default=False, help="Detect destroyed stone blocks", action="store_true"
+        "--destroyed",
+        default=False,
+        help="Detect destroyed stone blocks",
+        action="store_true",
     )
     parser.add_argument(
         "--output", default="blocks_detection", help="Output folder", type=str
