@@ -16,7 +16,7 @@ In this repository are collected tools and scripts for the game 7 Days to Die:
 
 Clone the module, create a virtual environment and install it:
 
-```bash
+```powershell
 git clone git@github.com:tassoneroberto/py7dtd.git
 cd py7dtd
 py -3.7 -m venv venv
@@ -24,9 +24,9 @@ py -3.7 -m venv venv
 py -m pip install .[ai]
 ```
 
-Note: if you are only interested in the `crack passcode` function you can omit `[ai]` from the above command:
+Note: if you are not interested in "entities detection" or "aimbot" then you can omit `[ai]` from the above command:
 
-```bash
+```powershell
 py -m pip install .
 ```
 
@@ -34,7 +34,7 @@ py -m pip install .
 
 To install the package in edit mode (for developers) specify `-e`:
 
-```bash
+```powershell
 py -m pip install -e .[ai]
 ```
 
@@ -88,7 +88,7 @@ Simple aim bot capable of:
 
 ### Usage
 
-```bash
+```powershell
 py7dtd_auto_shooting --delay 200
 ```
 
@@ -100,7 +100,7 @@ The following table is listing all the arguments that can be specified:
 
 | arg           |  description      |   default   |
 |:-------------:|:-----------------:| :----------:|
-| help          | Arguments description           | `NA`|
+| help          | Arguments description           | `N/A`|
 | delay         | Time in ms between each screenshot | `500`|
 | output         | Output folder | `./auto_shooting`|
 
@@ -120,13 +120,13 @@ Example of a bruteforce attack testing passcodes of 2-10 characters length compo
 
 Note: Press `ESC` to interrupt the bot.
 
-```bash
+```powershell
 py7dtd_crack_passcode --brute --digits --lower --min 2 --max 10 --delay 20 --limit 100 --timeout 60
 ```
 
 Get the arguments list with the `help` function:
 
-```bash
+```powershell
 py7dtd_crack_passcode --help
 ```
 
@@ -134,7 +134,7 @@ py7dtd_crack_passcode --help
 
 Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
 
-```bash
+```powershell
 py7dtd_crack_passcode --dict --dictpath ./dictionaries/top1000.txt --delay 30
 ```
 
@@ -150,7 +150,7 @@ The following table is listing all the arguments to use for each method:
 
 | arg           |  description      |   default   | type     |
 |:-------------:|:-----------------:| :----------:|:--------:|
-| help          | Arguments description           | `NA`|`NA`|
+| help          | Arguments description           | `N/A`|`N/A`|
 | min           | Minimum length                  | `1`|`brute`|
 | max           | Maximum length                  | `20`|`brute`|
 | digits        | Include digits                  | `False`**|`brute`|
@@ -180,13 +180,13 @@ Specify the blocks to be identified by passing them as arguments (e.g. `--topsoi
 
 Note: Press `ESC` to interrupt the script.
 
-```bash
+```powershell
 py7dtd_blocks_detection --topsoil --destroyed
 ```
 
 Get the arguments list with the `help` function:
 
-```bash
+```powershell
 py7dtd_blocks_detection --help
 ```
 
@@ -202,7 +202,7 @@ The following table is listing all the arguments:
 
 | arg           |  description              |   default   |
 |:-------------:|:-------------------------:| :----------:|
-| help          | Arguments description     | `NA`        |
+| help          | Arguments description     | `N/A`        |
 | topsoil       | Topsoil blocks            | `False`*   |
 | destroyed     | Destroyed stone blocks    | `False`*   |
 | output        | Output folder             | `./blocks_detection`|
