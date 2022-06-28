@@ -1,8 +1,15 @@
+from distutils.util import convert_path
 from setuptools import find_packages, setup
 
+module_name = "py7dtd"
+main_ns = {}
+ver_path = convert_path(f"src/{module_name}/version.py")
+with open(ver_path) as ver_file:
+    exec(ver_file.read(), main_ns)
+
 setup(
-    name="py7dtd",
-    version="0.1",
+    name=module_name,
+    version=main_ns["__version__"],
     packages=find_packages(where="src", exclude=["tests*"]),
     package_dir={"": "src"},
     license="MIT",
