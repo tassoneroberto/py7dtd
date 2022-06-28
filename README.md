@@ -12,7 +12,7 @@ In this repository are collected tools and scripts for the game 7 Days to Die:
 - Passcode cracking
 - Block detection
 
-## Installation
+## Installing
 
 This software can be installed as a `pip` module.
 
@@ -38,7 +38,7 @@ There are currently three functions available:
 
 ---
 
-## Contribution
+## Contributing
 
 Clone the module, create a virtual environment and install it:
 
