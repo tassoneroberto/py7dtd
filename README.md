@@ -12,7 +12,33 @@ In this repository are collected tools and scripts for the game 7 Days to Die:
 - Passcode cracking
 - Block detection
 
-## Installation (Windows)
+## Installation
+
+This software can be installed as a `pip` module.
+
+### Windows
+
+```powershell
+py -m pip install py7dtd
+```
+
+### Unix
+
+```bash
+python -m pip install py7dtd
+```
+
+### Usage
+
+There are currently three functions available:
+
+- [Auto shooting](#aim-bot)
+- [Crack passcode](#passcode-cracking)
+- [Blocks detection](#blocks-detection)
+
+---
+
+## Contribution
 
 Clone the module, create a virtual environment and install it:
 
@@ -62,6 +88,8 @@ You also need to download the trained model (<https://github.com/tassoneroberto/
 
 To be able to train a model you need to download the `ImageAI`'s pre-trained model (<https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/pretrained-yolov3.h5>) and move it to `./src/ai/`.
 
+---
+
 ## Entities detection
 
 ❗ Under development ❗
@@ -75,6 +103,8 @@ The annotation of the images has been done using the tool `labelImg`: <https://g
 ### Proof of concept
 
 ![detection](preview/preview1.png)
+
+---
 
 ## Aim bot
 
@@ -105,6 +135,8 @@ The following table is listing all the arguments that can be specified:
 | output         | Output folder | `./auto_shooting`|
 
 ![detection](preview/preview2.png)
+
+---
 
 ## Passcode cracking
 
@@ -165,6 +197,8 @@ The following table is listing all the arguments to use for each method:
 **This attribute is required if `dict` is selected*
 
 ***At least one of these is required*
+
+---
 
 ## Blocks detection
 
