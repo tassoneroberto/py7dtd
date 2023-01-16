@@ -5,6 +5,7 @@ import logging
 import string
 import threading
 import time
+from datetime import timedelta
 from itertools import product
 
 import win32com.client as comclt
@@ -115,9 +116,14 @@ class CrackPasscode(object):
                     return
 
     def crack_dict(self):
+        attempts = 0
         with open(self.args.dictpath, "r") as dict_file:
             for line in dict_file:
                 self.inject_string(line.strip())
+                attempts += 1
+                if attempts % 100 == 0:
+                    logging.info("Processed " + str(attempts) + " codes. " +
+                                 "Elapsed time: " + str(timedelta(seconds=time.time() - self.start_time)))
                 if self.check_stopped():
                     return
 
@@ -239,8 +245,8 @@ def main():
     args = parser.parse_args()
 
     crack_passcode = CrackPasscode(args)
+    logging.info("Process started.")
     crack_passcode.start()
-
     logging.info("Process terminated.")
 
 
