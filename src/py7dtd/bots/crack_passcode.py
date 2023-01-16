@@ -24,7 +24,7 @@ class CrackPasscode(object):
         self.args = args
         self.init_args()
 
-    def init_args(self):
+    def init_args(self) -> None:
         if self.args.brute and self.args.dict:
             logging.error(
                 "Error: only one method can be selected."
@@ -46,11 +46,11 @@ class CrackPasscode(object):
 
         self.delay = self.args.delay / 1000
 
-    def watch_keys(self):
+    def watch_keys(self) -> None:
         self.watcher = KeyWatcher(stop_func=self.stop)
         self.watcher.start()
 
-    def start(self):
+    def start(self) -> None:
         # Select the application window
         try:
             self.dimensions = select_window()
@@ -81,7 +81,7 @@ class CrackPasscode(object):
 
         logging.info("Crack passcode stopped")
 
-    def crack_brute(self):
+    def crack_brute(self) -> None:
         allowed_chars = []
         if self.args.digits:
             allowed_chars += string.digits
@@ -115,37 +115,51 @@ class CrackPasscode(object):
                 if self.check_stopped():
                     return
 
-    def crack_dict(self):
-        attempts = 0
+    def crack_dict(self) -> None:
+        self.attempts = 0
+        line_count = 0
+        previous = ''
+        if self.args.resumedict:
+            logging.info('Start reading dictionary from line ' +
+                         str(self.args.resumedict))
         with open(self.args.dictpath, "r") as dict_file:
             for line in dict_file:
-                self.inject_string(line.strip())
-                attempts += 1
-                if attempts % 100 == 0:
-                    logging.info("Processed " + str(attempts) + " codes. " +
-                                 "Elapsed time: " + str(timedelta(seconds=time.time() - self.start_time)))
+                line_count += 1
+                if self.args.resumedict and line_count < self.args.resumedict:
+                    continue
+                self.inject_string(line.strip(), previous)
+                self.attempts += 1
+                if self.attempts % 100 == 0:
+                    logging.info("Total processed passcodes: " + str(self.attempts + self.args.resumedict) +
+                                 " | Elapsed time: " + str(timedelta(seconds=time.time() - self.start_time)))
                 if self.check_stopped():
+                    logging.info('Last tried passcode (line ' +
+                                 str(line_count)+'): ' + line)
                     return
+                previous = line
 
-    def inject_string(self, attempt):
+    def inject_string(self, passcode, previous=None) -> None:
         time.sleep(self.delay)
         RightMouseClick()
         time.sleep(self.delay)
-        self.wsh.SendKeys(attempt)
+        self.wsh.SendKeys(passcode)
         time.sleep(self.delay)
         self.wsh.SendKeys("~")
         time.sleep(self.delay)
 
         if self.passcode_found():
-            logging.info("Passcode found: " + attempt)
+            logging.info("Passcode found: " + passcode)
+            if previous:
+                logging.info(
+                    "If it is incorrect try the previous one: " + previous)
             self.stop()
         else:
             self.tries += 1
 
-    def stop(self):
+    def stop(self) -> None:
         self.stopped = True
 
-    def passcode_found(self):
+    def passcode_found(self) -> bool:
         image = ImageGrab.grab(
             (
                 self.pointer_center[0],
@@ -157,7 +171,7 @@ class CrackPasscode(object):
         pixel_color = image.getcolors()[0][1]
         return pixel_color != (96, 96, 96)
 
-    def check_stopped(self):
+    def check_stopped(self) -> bool:
         if self.args.limit and self.tries >= self.args.limit:
             logging.info(
                 "Max tries reached (" + str(self.args.limit) + "). Stopping..."
@@ -177,7 +191,7 @@ class CrackPasscode(object):
             return True
 
 
-def get_argument_parser():
+def get_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--limit", default=None, help="Maximum number of tries", type=int
@@ -195,17 +209,20 @@ def get_argument_parser():
         action="store_true",
     )
     parser.add_argument(
+        "--resumedict", default=0, help="Line number to resume the dictionary attack", type=int
+    )
+    parser.add_argument(
         "--min", default=1, help="Minimum length (default = 1)", type=int
     )
     parser.add_argument(
         "--max", default=20, help="Maximum length (default = 20)", type=int
     )
     parser.add_argument(
-        "--digits", default=False, help="Include digits", action="store_true"
+        "--digits", default=True, help="Include digits", action="store_true"
     )
     parser.add_argument(
         "--lower",
-        default=False,
+        default=True,
         help="Include lowercase characters",
         action="store_true",
     )
@@ -223,7 +240,7 @@ def get_argument_parser():
     )
     parser.add_argument(
         "--delay",
-        default=50,
+        default=20,
         help="Delay in ms between each mouse/keyboard action (default = 50)",
         type=int,
     )
@@ -232,7 +249,7 @@ def get_argument_parser():
     )
     parser.add_argument(
         "--dictpath",
-        default="./dictionaries/top1000.txt",
+        default="./dictionaries/top1000000.txt",
         help="Dictionary file path",
         type=str,
     )
@@ -240,7 +257,7 @@ def get_argument_parser():
     return parser
 
 
-def main():
+def main() -> None:
     parser = get_argument_parser()
     args = parser.parse_args()
 

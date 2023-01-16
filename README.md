@@ -148,12 +148,12 @@ Bruteforce/dictionary attack on chests/doors passcode.
 
 It is recommended to set the game in window mode with a resolution of 640x480.
 
-Example of a bruteforce attack testing passcodes of 2-10 characters length composed of digits and lowercase characters, with a delay of 20ms between each try, a limit of 100 tries and a timeout of 60 seconds.
+Example of a bruteforce attack testing passcodes composed of digits and lowercase characters.
 
 Note: Press `ESC` to interrupt the bot.
 
 ```powershell
-py7dtd_crack_passcode --brute --digits --lower --min 2 --max 10 --delay 20 --limit 100 --timeout 60
+py7dtd_crack_passcode --brute --digits --lower
 ```
 
 Get the arguments list with the `help` function:
@@ -164,10 +164,10 @@ py7dtd_crack_passcode --help
 
 ![detection](preview/bruteforce-preview.gif)
 
-Example of a dictionary attack with a delay of 30ms between each try and no limit in tries.
+Example of a dictionary attack with no limit in tries.
 
 ```powershell
-py7dtd_crack_passcode --dict --dictpath ./dictionaries/top1000.txt --delay 30
+py7dtd_crack_passcode --dict
 ```
 
 Note: dictionaries can be found at <https://github.com/danielmiessler/SecLists/tree/master/Passwords>.
@@ -185,18 +185,15 @@ The following table is listing all the arguments to use for each method:
 | help          | Arguments description           | `N/A`|`N/A`|
 | min           | Minimum length                  | `1`|`brute`|
 | max           | Maximum length                  | `20`|`brute`|
-| digits        | Include digits                  | `False`**|`brute`|
-| lower         | Include lowercase characters    | `False`**|`brute`|
-| upper         | Include uppercase characters    | `False`**|`brute`|
-| special       | Include special characters      | `False`**|`brute`|
-| dictpath      | Dictionary file path            | `./dictionaries/top1000.txt`|`dict`*|
+| digits        | Include digits                  | `True`|`brute`|
+| lower         | Include lowercase characters    | `True`|`brute`|
+| upper         | Include uppercase characters    | `False`|`brute`|
+| special       | Include special characters      | `False`|`brute`|
+| dictpath      | Dictionary file path            | `./dictionaries/top1000000.txt`|`dict`|
+| resumedict    | Line number to resume a dictionary attack | `0`|`dict`|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
 | timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
 | delay         | Delay in ms between each action | `20`|`brute`, `dict`|
-
-**This attribute is required if `dict` is selected*
-
-***At least one of these is required*
 
 ---
 
