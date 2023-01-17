@@ -45,6 +45,8 @@ class CrackPasscode(object):
             self.args.brute = True
 
         self.delay = self.args.delay / 1000
+        self.last_codes = []
+        self.attempts = 0
 
     def watch_keys(self) -> None:
         self.watcher = KeyWatcher(stop_func=self.stop)
@@ -98,6 +100,10 @@ class CrackPasscode(object):
             allowed_chars.remove("{")
             allowed_chars.remove("}")
             allowed_chars.remove("~")
+        # if self.args.lowercyrillic:
+        #     allowed_chars += list('абвгдеёжзийклмнопстуфхцчшщъыьэюя')
+        # if self.args.uppercyrillic:
+        #     allowed_chars += list('АБВГДЕЁЖЗИЙКЛМНОПСТУФХЦЧШЩЪЫЬЭЮЯ')
 
         if allowed_chars.count == 0:
             logging.error(
@@ -111,14 +117,21 @@ class CrackPasscode(object):
             to_attempt = product(allowed_chars, repeat=length)
 
             for attempt in to_attempt:
-                self.inject_string("".join(attempt))
+                passcode = "".join(attempt)
+                self.last_codes.append(passcode)
+                if len(self.last_codes) > 5:
+                    self.last_codes.pop(0)
+                self.inject_string(passcode)
+                self.attempts += 1
+                if self.attempts % 100 == 0:
+                    logging.info("Total processed passcodes: " + str(self.attempts) +
+                                 " | Elapsed time: " + str(timedelta(seconds=time.time() - self.start_time)))
                 if self.check_stopped():
+                    logging.info('Last tried passcode: ' + passcode)
                     return
 
     def crack_dict(self) -> None:
-        self.attempts = 0
         line_count = 0
-        previous = ''
         if self.args.resumedict:
             logging.info('Start reading dictionary from line ' +
                          str(self.args.resumedict))
@@ -127,16 +140,19 @@ class CrackPasscode(object):
                 line_count += 1
                 if self.args.resumedict and line_count < self.args.resumedict:
                     continue
-                self.inject_string(line.strip(), previous)
+                passcode = line.strip()
+                self.last_codes.append(passcode)
+                if len(self.last_codes) > 5:
+                    self.last_codes.pop(0)
+                self.inject_string(passcode)
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info("Total processed passcodes: " + str(self.attempts + self.args.resumedict) +
                                  " | Elapsed time: " + str(timedelta(seconds=time.time() - self.start_time)))
                 if self.check_stopped():
                     logging.info('Last tried passcode (line ' +
-                                 str(line_count)+'): ' + line)
+                                 str(line_count)+'): ' + passcode)
                     return
-                previous = line
 
     def inject_string(self, passcode, previous=None) -> None:
         time.sleep(self.delay)
@@ -149,9 +165,9 @@ class CrackPasscode(object):
 
         if self.passcode_found():
             logging.info("Passcode found: " + passcode)
-            if previous:
+            if len(self.last_codes) > 0:
                 logging.info(
-                    "If it is incorrect try the previous one: " + previous)
+                    "If it is incorrect try the previous attempts: [" + ', '.join(self.last_codes) + "]")
             self.stop()
         else:
             self.tries += 1
@@ -218,11 +234,11 @@ def get_argument_parser() -> argparse.ArgumentParser:
         "--max", default=20, help="Maximum length (default = 20)", type=int
     )
     parser.add_argument(
-        "--digits", default=True, help="Include digits", action="store_true"
+        "--digits", default=False, help="Include digits", action="store_true"
     )
     parser.add_argument(
         "--lower",
-        default=True,
+        default=False,
         help="Include lowercase characters",
         action="store_true",
     )
@@ -232,6 +248,18 @@ def get_argument_parser() -> argparse.ArgumentParser:
         help="Include uppercase characters",
         action="store_true",
     )
+    # parser.add_argument(
+    #     "--lowercyrillic",
+    #     default=True,
+    #     help="Include lowercase cyrillic characters",
+    #     action="store_true",
+    # )
+    # parser.add_argument(
+    #     "--uppercyrillic",
+    #     default=False,
+    #     help="Include uppercase cyrillic characters",
+    #     action="store_true",
+    # )
     parser.add_argument(
         "--special",
         default=False,
