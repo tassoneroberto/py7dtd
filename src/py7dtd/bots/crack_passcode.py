@@ -99,13 +99,6 @@ class CrackPasscode(object):
             allowed_chars += string.ascii_uppercase
         if self.args.special:
             allowed_chars += string.punctuation
-            # FIXME: the following characters can not be sent
-            # https://github.com/tassoneroberto/py7dtd/issues/17
-            allowed_chars.remove("(")
-            allowed_chars.remove(")")
-            allowed_chars.remove("{")
-            allowed_chars.remove("}")
-            allowed_chars.remove("~")
         if self.args.lowercyrillic:
             allowed_chars += list("абвгдеёжзийклмнопстуфхцчшщъыьэюя")
         if self.args.uppercyrillic:
@@ -127,7 +120,7 @@ class CrackPasscode(object):
                 self.last_codes.append(passcode)
                 if len(self.last_codes) > 5:
                     self.last_codes.pop(0)
-                self.inject_string(passcode)
+                self.try_passcode(passcode)
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
