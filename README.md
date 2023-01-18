@@ -184,10 +184,12 @@ The following table is listing all the arguments to use for each method:
 |:-------------:|:-----------------:| :----------:|:--------:|
 | help          | Arguments description           | `N/A`|`N/A`|
 | min           | Minimum length                  | `1`|`brute`|
-| max           | Maximum length                  | `20`|`brute`|
-| digits        | Include digits                  | `True`*|`brute`|
-| lower         | Include lowercase characters    | `True`*|`brute`|
+| max           | Maximum length                  | `35`|`brute`|
+| digits        | Include digits                  | `False`*|`brute`|
+| lower         | Include lowercase characters    | `False`*|`brute`|
 | upper         | Include uppercase characters    | `False`*|`brute`|
+| lowercyrillic | Include lowercase cyrillic characters    | `False`*|`brute`|
+| uppercyrillic | Include uppercase cyrillic characters    | `False`*|`brute`|
 | special       | Include special characters      | `False`*|`brute`|
 | dictpath      | Dictionary file path            | `./dictionaries/top1000000.txt`|`dict`|
 | resumedict    | Line number to resume a dictionary attack | `0`|`dict`|

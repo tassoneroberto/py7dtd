@@ -17,7 +17,7 @@ setup(
     keywords=["7dtd", "bots", "hacks", "scripts"],
     long_description_content_type="text/markdown",
     long_description=open("README.md", encoding="utf8").read(),
-    install_requires=["pywin32==304", "pyWinhook==1.6.2", "pillow==7.0.0"],
+    install_requires=["pywin32==304", "pyWinhook==1.6.2", "pillow==7.0.0", "pyperclip==1.8.2"],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
     author_email="roberto.tassone@proton.me",
