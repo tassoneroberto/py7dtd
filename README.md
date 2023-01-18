@@ -184,7 +184,7 @@ The following table is listing all the arguments to use for each method:
 |:-------------:|:-----------------:| :----------:|:--------:|
 | help          | Arguments description           | `N/A`|`N/A`|
 | min           | Minimum length                  | `1`|`brute`|
-| max           | Maximum length                  | `35`|`brute`|
+| max           | Maximum length                  | `20`|`brute`|
 | digits        | Include digits                  | `False`*|`brute`|
 | lower         | Include lowercase characters    | `False`*|`brute`|
 | upper         | Include uppercase characters    | `False`*|`brute`|
@@ -195,7 +195,7 @@ The following table is listing all the arguments to use for each method:
 | resumedict    | Line number to resume a dictionary attack | `0`|`dict`|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
 | timeout       | Maximum time in seconds allowed | `∞`|`brute`, `dict`|
-| delay         | Delay in ms between each action | `20`|`brute`, `dict`|
+| delay         | Delay in ms between each action | `35`|`brute`, `dict`|
 
 ---
 
