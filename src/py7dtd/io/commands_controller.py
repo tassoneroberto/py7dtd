@@ -49,7 +49,7 @@ class Input(ctypes.Structure):
     _fields_ = [("type", ctypes.c_ulong), ("ii", Input_I)]
 
 
-def PressKey(hexKeyCode):
+def PressKey(hexKeyCode) -> None:
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
     ii_.ki = KeyBdInput(0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra))
@@ -57,7 +57,7 @@ def PressKey(hexKeyCode):
     sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
-def ReleaseKey(hexKeyCode):
+def ReleaseKey(hexKeyCode) -> None:
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
     ii_.ki = KeyBdInput(
@@ -67,7 +67,7 @@ def ReleaseKey(hexKeyCode):
     sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
-def MoveMouseAbsolute(x, y):
+def MoveMouseAbsolute(x, y) -> None:
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
     x = int(x * (65536 / getSystemMetrics(0)) + 1)
@@ -77,25 +77,25 @@ def MoveMouseAbsolute(x, y):
     sendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 
-def MoveMouseRel(x, y):
+def MoveMouseRel(x, y) -> None:
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, int(x), int(y), 0, 0)
 
 
-def LeftMouseClick():
+def LeftMouseClick() -> None:
     # Mouse LClick Down, relative coords, dx=0, dy=0
     mouseEvent(0x2, 0, 0, 0, 0)
     # Mouse LClick Up, relative coords, dx=0, dy=0
     mouseEvent(0x4, 0, 0, 0, 0)
 
 
-def RightMouseClick():
+def RightMouseClick() -> None:
     # Mouse RClick Down, relative coords, dx=0, dy=0
     mouseEvent(0x8, 0, 0, 0, 0)
     # Mouse RClick Up, relative coords, dx=0, dy=0
     mouseEvent(0x10, 0, 0, 0, 0)
 
 
-def MiddleMouseClick():
+def MiddleMouseClick() -> None:
     # Mouse MClick Down, relative coords, dx=0, dy=0
     mouseEvent(0x20, 0, 0, 0, 0)
     # Mouse MClick Up, relative coords, dx=0, dy=0

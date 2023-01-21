@@ -5,16 +5,15 @@ import logging
 import string
 import threading
 import time
-import pyperclip
 from datetime import timedelta
 from itertools import product
+from os import path
 
+import pyperclip
 import win32com.client as comclt
 from PIL import ImageGrab
-from py7dtd.io.commands_controller import (
-    MoveMouseAbsolute,
-    RightMouseClick,
-)
+from py7dtd.constants import APPLICATION_WINDOW_NAME
+from py7dtd.io.commands_controller import MoveMouseAbsolute, RightMouseClick
 from py7dtd.io.key_watcher import KeyWatcher
 from py7dtd.io.window_handler import get_absolute_window_center, select_window
 
@@ -31,22 +30,22 @@ class CrackPasscode(object):
     def init_args(self) -> None:
         if self.args.brute and self.args.dict:
             logging.error(
-                "Error: only one method can be selected."
-                + "Available are: `brute`, `dict`."
+                "Error: only one method can be selected. Available are: `brute`, `dict`."
             )
             exit()
 
-        if self.args.dict and not self.args.dictpath:
-            logging.error("Error: a dictionary must be selected.")
+        if self.args.dict and not path.exists(self.args.dictpath):
+            logging.error(
+                "Error: the specified dictionary file does not exist."
+            )
             exit()
 
         if not self.args.brute and not self.args.dict:
             logging.warning(
                 "Warning: a method has not been selected."
-                + "Available are: `brute`, `dict`."
-                + "`brute` has been selected by default."
+                + " Available are: `brute`, `dict`. `dict` has been selected by default."
             )
-            self.args.brute = True
+            self.args.dict = True
 
         self.delay = self.args.delay / 1000
         self.last_codes = []
@@ -59,7 +58,7 @@ class CrackPasscode(object):
     def start(self) -> None:
         # Select the application window
         try:
-            self.dimensions = select_window()
+            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
@@ -74,7 +73,7 @@ class CrackPasscode(object):
 
         # Init win32com to inject keys
         self.wsh = comclt.Dispatch("WScript.Shell")
-        self.wsh.AppActivate("7 Days To Die")
+        self.wsh.AppActivate(APPLICATION_WINDOW_NAME)
 
         self.tries = 0
         self.start_time = time.time()
@@ -104,14 +103,13 @@ class CrackPasscode(object):
         if self.args.uppercyrillic:
             allowed_chars += list("АБВГДЕЁЖЗИЙКЛМНОПСТУФХЦЧШЩЪЫЬЭЮЯ")
 
-        if allowed_chars.count == 0:
-            logging.error(
-                "Error: empty characters set."
-                + "Please specify at least one of: "
-                + "[digits, lower, upper, special]"
+        if len(allowed_chars) == 0:
+            logging.warning(
+                "Warning: empty characters set. `digits` and `lower` have been selected by default."
             )
-            return
+            allowed_chars += string.digits + string.ascii_lowercase
 
+        logging.info("Brute force attack started")
         for length in range(self.args.min, self.args.max + 1):
             to_attempt = product(allowed_chars, repeat=length)
 
@@ -124,20 +122,19 @@ class CrackPasscode(object):
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
-                        "Total processed passcodes: "
-                        + str(self.attempts)
-                        + " | Elapsed time: "
-                        + str(timedelta(seconds=time.time() - self.start_time))
+                        f"Total processed passcodes: {str(self.attempts)}"
+                        + " | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
-                    logging.info("Last tried passcode: " + passcode)
+                    logging.info(f"Last tried passcode: {passcode}")
                     return
 
     def crack_dict(self) -> None:
+        logging.info("Dictionary attack started")
         line_count = 0
         if self.args.resumedict:
             logging.info(
-                "Start reading dictionary from line " + str(self.args.resumedict)
+                f"Start reading dictionary from line {str(self.args.resumedict)}"
             )
         with open(self.args.dictpath, "r", encoding="utf8") as dict_file:
             for line in dict_file:
@@ -152,37 +149,30 @@ class CrackPasscode(object):
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
-                        "Total processed passcodes: "
-                        + str(self.attempts + self.args.resumedict)
-                        + " | Elapsed time: "
-                        + str(timedelta(seconds=time.time() - self.start_time))
+                        f"Total processed passcodes: {str(self.attempts + self.args.resumedict)}"
+                        + " | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
                     logging.info(
-                        "Last tried passcode (line "
-                        + str(line_count)
-                        + "): "
-                        + passcode
+                        f"Last tried passcode (line {str(line_count)}): {passcode}"
                     )
                     return
 
     # documentation: https://ss64.com/vb/sendkeys.html
     def try_passcode(self, passcode) -> None:
-        pyperclip.copy(passcode) # copy passcode to clipboard
+        pyperclip.copy(passcode)  # copy passcode to clipboard
         RightMouseClick()
         time.sleep(self.delay)
-        self.wsh.SendKeys("^v") # CTRL+V
+        self.wsh.SendKeys("^v")  # CTRL+V
         time.sleep(self.delay)
-        self.wsh.SendKeys("{ENTER}") # press ENTER
+        self.wsh.SendKeys("{ENTER}")  # press ENTER
         time.sleep(self.delay)
 
         if self.correct_passcode():
-            logging.info("Passcode found: " + passcode)
+            logging.info(f"Passcode found: {passcode}")
             if len(self.last_codes) > 0:
                 logging.info(
-                    "If it is incorrect try the previous attempts: ["
-                    + ", ".join(self.last_codes)
-                    + "]"
+                    f'If it is incorrect try the previous attempts: [{", ".join(self.last_codes)}]'
                 )
             self.stop()
         else:
@@ -206,12 +196,15 @@ class CrackPasscode(object):
     def check_stopped(self) -> bool:
         if self.args.limit and self.tries >= self.args.limit:
             logging.info(
-                "Max tries reached (" + str(self.args.limit) + "). Stopping..."
+                f"Max tries reached ({str(self.args.limit)}). Stopping..."
             )
             self.key_watcher.shutdown()
             return True
-        if self.args.timeout and time.time() - self.start_time >= self.args.timeout:
-            logging.info("Timeout (" + str(self.args.timeout) + "s). Stopping...")
+        if (
+            self.args.timeout
+            and time.time() - self.start_time >= self.args.timeout
+        ):
+            logging.info(f"Timeout ({str(self.args.timeout)}s). Stopping...")
             self.key_watcher.shutdown()
             return True
         if self.stopped:

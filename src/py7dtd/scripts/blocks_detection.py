@@ -8,6 +8,7 @@ import threading
 import time
 
 from PIL import ImageGrab
+from py7dtd.constants import APPLICATION_WINDOW_NAME
 from py7dtd.io.key_watcher import KeyWatcher
 from py7dtd.io.window_handler import select_window
 
@@ -25,7 +26,7 @@ class BlocksDetection(object):
         if not self.args.topsoil and not self.args.destroyed:
             logging.error(
                 "Error: No blocks selected."
-                + " Select at least one of: `topsoil`, `destroyed`."
+                + " Select at least one of: [`topsoil`, `destroyed`]."
             )
             exit()
         if not os.path.exists(self.args.output):
@@ -38,7 +39,7 @@ class BlocksDetection(object):
 
     def start(self):
         try:
-            self.dimensions = select_window()
+            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
@@ -86,13 +87,11 @@ class BlocksDetection(object):
                         pixels[x, y] = (255, 0, 0)  # mark it red
 
         filename = (
-            str(datetime.datetime.now().strftime("%Y%m%d-%I%M%S%f")) + ".png"
+            f'{str(datetime.datetime.now().strftime("%Y%m%d-%I%M%S%f"))}.png'
         )
-        image.save(os.path.join(self.args.output, filename))
-        logging.info(
-            "New block detection picture created"
-            + f" -> {self.args.output}/{filename}"
-        )
+        full_path = os.path.join(self.args.output, filename)
+        image.save(full_path)
+        logging.info(f"New block detection picture created -> {full_path}")
 
 
 def get_argument_parser():

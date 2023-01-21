@@ -11,6 +11,7 @@ from pathlib import Path
 import tensorflow as tf
 from imageai.Detection.Custom import CustomObjectDetection
 from PIL import ImageGrab
+from py7dtd.constants import APPLICATION_WINDOW_NAME
 from py7dtd.io.commands_controller import LeftMouseClick, MoveMouseRel
 from py7dtd.io.key_watcher import KeyWatcher
 from py7dtd.io.window_handler import get_relative_window_center, select_window
@@ -64,7 +65,7 @@ class AutoShooting(object):
     def start(self):
         # Select the application window
         try:
-            self.dimensions = select_window()
+            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return

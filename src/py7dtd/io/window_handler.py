@@ -8,7 +8,8 @@ logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
 
 
-def select_window(window_name="7 Days to Die"):
+def select_window(window_name):
+    logging.info(f"Detecting {window_name}...")
     hwnd = win32gui.FindWindow(None, r"{}".format(window_name))
     if hwnd == 0:
         raise Exception(f"Application {window_name} not detected.")
@@ -17,7 +18,7 @@ def select_window(window_name="7 Days to Die"):
     width = dimensions[2] - dimensions[0]
     height = dimensions[3] - dimensions[1]
     logging.info(
-        f"Application {window_name} [{width}x{height}] detected successfully."
+        f"Application {window_name} detected successfully. Window size: [{width}x{height}]"
     )
     return dimensions
 

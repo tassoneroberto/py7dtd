@@ -10,14 +10,14 @@ logging.root.setLevel(logging.INFO)
 
 
 class KeyWatcher(object):
-    def __init__(self, stop_func, p_func=None):
+    def __init__(self, stop_func, p_func=None) -> None:
         self.stop_func = stop_func
         self.p_func = p_func
         self.hm = HookManager()
         self.hm.KeyDown = self.on_keyboard_event
         self.hm.HookKeyboard()
 
-    def on_keyboard_event(self, event):
+    def on_keyboard_event(self, event) -> bool:
         try:
             if event.KeyID == 27:  # `ESC` key
                 logging.info("ESC key pressed. Stopping...")
@@ -30,10 +30,10 @@ class KeyWatcher(object):
         finally:
             return True
 
-    def start(self):
+    def start(self) -> None:
         PumpMessages()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         PostQuitMessage(0)
         self.hm.UnhookKeyboard()
         logging.info("Key watcher stopped")
