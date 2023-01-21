@@ -123,7 +123,7 @@ class CrackPasscode(object):
                 if self.attempts % 100 == 0:
                     logging.info(
                         f"Total processed passcodes: {str(self.attempts)}"
-                        + " | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
+                        + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
                     logging.info(f"Last tried passcode: {passcode}")
@@ -150,7 +150,7 @@ class CrackPasscode(object):
                 if self.attempts % 100 == 0:
                     logging.info(
                         f"Total processed passcodes: {str(self.attempts + self.args.resumedict)}"
-                        + " | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
+                        + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
                     logging.info(
