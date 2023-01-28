@@ -63,7 +63,7 @@ To install the package in edit mode (for developers) specify `-e`:
 
 ```powershell
 py -m pip install -e .[ai]
-py -m ltt install torch torchvision
+ltt install torch torchvision
 ```
 
 ### Dependencies for entities detection
