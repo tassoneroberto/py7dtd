@@ -10,3 +10,5 @@ blocks_detection/
 auto_shooting/
 dist/
 .vscode
+dataset/json/*
+dataset/models/*

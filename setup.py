@@ -17,7 +17,13 @@ setup(
     keywords=["7dtd", "bots", "hacks", "scripts"],
     long_description_content_type="text/markdown",
     long_description=open("README.md", encoding="utf8").read(),
-    install_requires=["pywin32==304", "pyWinhook==1.6.2", "pillow==7.0.0", "pyperclip==1.8.2"],
+    install_requires=[
+        "swig==4.1.1",
+        "pywin32==305",
+        "pyWinhook==1.6.2",
+        "pillow==9.4.0",
+        "pyperclip==1.8.2",
+    ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
     author_email="roberto.tassone@proton.me",
@@ -33,6 +39,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
+            "py7dtd_model_training = py7dtd.ai.training:main",
             "py7dtd_crack_passcode = py7dtd.bots.crack_passcode:main",
             "py7dtd_auto_shooting = py7dtd.bots.auto_shooting:main",
             "py7dtd_blocks_detection = py7dtd.scripts.blocks_detection:main",

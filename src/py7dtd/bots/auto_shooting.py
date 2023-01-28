@@ -8,9 +8,9 @@ import time
 from ctypes import windll
 from pathlib import Path
 
-import tensorflow as tf
 from imageai.Detection.Custom import CustomObjectDetection
 from PIL import ImageGrab
+from py7dtd.ai.detection import Detector
 from py7dtd.constants import APPLICATION_WINDOW_NAME
 from py7dtd.io.commands_controller import LeftMouseClick, MoveMouseRel
 from py7dtd.io.key_watcher import KeyWatcher
@@ -30,25 +30,8 @@ class AutoShooting(object):
         user32 = windll.user32
         user32.SetProcessDPIAware()
 
-        # Fix to prevent the full GPU memory issue
-        config = tf.compat.v1.ConfigProto()
-        config.gpu_options.allow_growth = True
-        tf.compat.v1.Session(config=config)
-
-        # Load the trained imageAi model
-        self.detector = CustomObjectDetection()
-        self.detector.setModelTypeAsYOLOv3()
-        model_path = os.path.join(
-            Path(os.path.dirname(__file__)).parent,
-            Path("ai/models/v2/model.h5"),
-        )
-        model_json_path = os.path.join(
-            Path(os.path.dirname(__file__)).parent,
-            Path("ai/models/v2/detection_config.json"),
-        )
-        self.detector.setModelPath(model_path)
-        self.detector.setJsonPath(model_json_path)
-        self.detector.loadModel()
+        # Load the trained model
+        self.detector = Detector(self.args.dataset)
 
     def init_args(self):
         self.input_file = os.path.join(self.args.output, "input.png")
@@ -83,18 +66,9 @@ class AutoShooting(object):
             image = ImageGrab.grab(self.dimensions)
             image.save(self.input_file)
             # Objects detection
-            detections = self.detector.detectObjectsFromImage(
-                input_image=self.input_file,
-                output_image_path=self.output_file,
-                minimum_percentage_probability=70,
+            detected_entities = self.detector.analyze(
+                self.input_file, self.output_file
             )
-            detected_entities = {}
-            for detection in detections:
-                if detection["name"] not in detected_entities:
-                    detected_entities[detection["name"]] = []
-                detected_entities[detection["name"]].append(
-                    detection["box_points"]
-                )
 
             logging.info(f"Detected Entities: {detected_entities}")
 
@@ -137,6 +111,12 @@ class AutoShooting(object):
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--dataset",
+        default="./dataset",
+        help="Dataset folder path",
+        type=str,
+    )
     parser.add_argument(
         "--delay",
         default=500,
