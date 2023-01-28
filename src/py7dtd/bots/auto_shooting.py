@@ -6,9 +6,7 @@ import os
 import threading
 import time
 from ctypes import windll
-from pathlib import Path
 
-from imageai.Detection.Custom import CustomObjectDetection
 from PIL import ImageGrab
 from py7dtd.ai.detection import Detector
 from py7dtd.constants import APPLICATION_WINDOW_NAME

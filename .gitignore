@@ -12,3 +12,4 @@ dist/
 .vscode
 dataset/json/*
 dataset/models/*
+pyio/

@@ -2,7 +2,6 @@
 
 import argparse
 import os
-from pathlib import Path
 
 from imageai.Detection.Custom import DetectionModelTrainer
 

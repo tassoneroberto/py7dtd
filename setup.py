@@ -35,7 +35,7 @@ setup(
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Libraries",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.10",
     ],
     entry_points={
         "console_scripts": [
