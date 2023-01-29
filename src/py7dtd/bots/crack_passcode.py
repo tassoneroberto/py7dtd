@@ -13,9 +13,16 @@ import pyperclip
 import win32com.client as comclt
 from PIL import ImageGrab
 from py7dtd.constants import APPLICATION_WINDOW_NAME
-from py7dtd.io.commands_controller import MoveMouseAbsolute, RightMouseClick
-from py7dtd.io.key_watcher import KeyWatcher
-from py7dtd.io.window_handler import get_absolute_window_center, select_window
+
+from iocontroller.keymouse.commands_controller import (
+    MoveMouseAbsolute,
+    RightMouseClick,
+)
+from iocontroller.keymouse.key_watcher import KeyWatcher
+from iocontroller.window.window_handler import (
+    get_absolute_window_center,
+    select_window,
+)
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)

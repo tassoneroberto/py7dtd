@@ -10,9 +10,16 @@ from ctypes import windll
 from PIL import ImageGrab
 from py7dtd.ai.detection import Detector
 from py7dtd.constants import APPLICATION_WINDOW_NAME
-from py7dtd.io.commands_controller import LeftMouseClick, MoveMouseRel
-from py7dtd.io.key_watcher import KeyWatcher
-from py7dtd.io.window_handler import get_relative_window_center, select_window
+
+from iocontroller.keymouse.commands_controller import (
+    LeftMouseClick,
+    MoveMouseRel,
+)
+from iocontroller.keymouse.key_watcher import KeyWatcher
+from iocontroller.window.window_handler import (
+    get_relative_window_center,
+    select_window,
+)
 
 logging.getLogger(__name__)
 logging.root.setLevel(logging.INFO)
