@@ -47,7 +47,7 @@ git clone --recurse-submodules git@github.com:tassoneroberto/py7dtd.git
 cd py7dtd
 py -3.10 -m venv venv
 .\venv\Scripts\Activate.ps1
-py -m pip install iocontroller
+py -m pip install .\iocontroller
 py -m pip install .[ai]
 ltt install torch torchvision
 ```
@@ -55,7 +55,7 @@ ltt install torch torchvision
 Note: if you are not interested in "entities detection" or "aimbot" then you can omit `[ai]` from the above command and the `ltt install torch torchvision` command:
 
 ```powershell
-py -m pip install iocontroller
+py -m pip install .\iocontroller
 py -m pip install .
 ```
 
@@ -64,7 +64,7 @@ py -m pip install .
 To install the package in edit mode (for developers) specify `-e`:
 
 ```powershell
-py -m pip install -e iocontroller
+py -m pip install -e .\iocontroller
 py -m pip install -e .[ai]
 ltt install torch torchvision
 ```
