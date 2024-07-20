@@ -27,7 +27,7 @@ logging.root.setLevel(logging.INFO)
 
 class AutoShooting(object):
     def __init__(self, args):
-        self.stopped = False
+        self.stopped = True
         self.args = args
         self.init_args()
 
@@ -108,7 +108,7 @@ class AutoShooting(object):
 
             time.sleep(self.args.delay / 1000)
 
-        logging.info("Auto shooting stopped")
+        logging.info("Auto shooting started")
 
     def stop(self):
         self.stopped = True
