@@ -72,7 +72,7 @@ class CrackPasscode(object):
         self.pointer_center = get_absolute_window_center(self.dimensions)
         MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
 
-        # Spawn the keywatcher thread
+        # Spawn the key_watcher thread
         self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
         # Daemon = True -> kill it when main thread terminates
         self.watcher_thread.setDaemon(True)
@@ -129,7 +129,7 @@ class CrackPasscode(object):
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
-                        f"Total processed passcodes: {str(self.attempts)}"
+                        f"Total processed pass codes: {str(self.attempts)}"
                         + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
@@ -156,7 +156,7 @@ class CrackPasscode(object):
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
-                        f"Total processed passcodes: {str(self.attempts + self.args.resumedict)}"
+                        f"Total processed pass codes: {str(self.attempts + self.args.resumedict)}"
                         + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
@@ -232,7 +232,7 @@ def get_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--brute",
         default=False,
-        help="Bruteforce attack (default method)",
+        help="Brute-force attack (default method)",
         action="store_true",
     )
     parser.add_argument(

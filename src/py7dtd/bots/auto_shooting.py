@@ -59,7 +59,7 @@ class AutoShooting(object):
             return
         self.pointer_center = get_relative_window_center(self.dimensions)
 
-        # Spawn the keywatcher thread
+        # Spawn the key_watcher thread
         self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
         # Daemon = True -> kill it when main thread terminates
         self.watcher_thread.setDaemon(True)

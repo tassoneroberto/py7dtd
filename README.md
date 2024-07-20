@@ -89,7 +89,7 @@ You can train it yourself by following the instructions below or you can downloa
 - <https://github.com/tassoneroberto/py7dtd/releases/download/v1.0.0-alpha1/yolov3_dataset_last.pt> (copy to `./dataset/models/`)
 - <https://github.com/tassoneroberto/py7dtd/releases/download/v1.0.0-alpha1/dataset_yolov3_detection_config.json> (copy to `./dataset/json/`)
 
-https://github.com/tassoneroberto/py7dtd/releases/download/v1.0.0-alpha1/dataset_yolov3_detection_config.json
+<https://github.com/tassoneroberto/py7dtd/releases/download/v1.0.0-alpha1/dataset_yolov3_detection_config.json>
 
 ### Training the entity detection model
 
@@ -194,13 +194,13 @@ The following table is listing all the arguments that can be specified:
 
 ❗ Under development ❗
 
-Bruteforce/dictionary attack on chests/doors passcode.
+Brute-force/dictionary attack on chests/doors passcode.
 
 ### Usage
 
 It is recommended to set the game in window mode with a resolution of 640x480.
 
-Example of a bruteforce attack testing passcodes composed of digits and lowercase characters.
+Example of a brute-force attack testing pass codes composed of digits and lowercase characters.
 
 Note: Press `ESC` to interrupt the bot.
 
@@ -228,7 +228,7 @@ Note: dictionaries can be found at <https://github.com/danielmiessler/SecLists/t
 
 ### Command line arguments
 
-The available methods are **bruteforce attack** (`--brute`) and **dictionary attack** (`--dict`).
+The available methods are **brute-force attack** (`--brute`) and **dictionary attack** (`--dict`).
 
 The following table is listing all the arguments to use for each method:
 
