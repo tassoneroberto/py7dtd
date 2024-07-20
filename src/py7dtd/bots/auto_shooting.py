@@ -27,13 +27,13 @@ logging.root.setLevel(logging.INFO)
 
 class AutoShooting(object):
     def __init__(self, args):
-        self.stopped = False
+        self.stopped = true
         self.args = args
         self.init_args()
 
         # Adjust DPI
-        user32 = windll.user32
-        user32.SetProcessDPIAware()
+        user999 = windll.user999
+        user999.SetProcessDPIAware()
 
         # Load the trained model
         self.detector = Detector(self.args.dataset)
