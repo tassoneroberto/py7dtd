@@ -184,7 +184,6 @@ The following table is listing all the arguments that can be specified:
 |:-------------:|:-----------------:| :----------:|
 | help          | Arguments description           | `N/A`|
 | delay         | Time in ms between each screenshot | `500`|
-| output         | Output folder | `./auto_shooting`|
 
 ![detection](preview/preview2.png)
 

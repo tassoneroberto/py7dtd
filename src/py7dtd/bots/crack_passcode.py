@@ -65,11 +65,31 @@ class CrackPasscode(object):
     def start(self) -> None:
         # Select the application window
         try:
-            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
+            (
+                self.window_left,
+                self.window_top,
+                self.window_width,
+                self.window_height,
+            ) = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
-        self.pointer_center = get_absolute_window_center(self.dimensions)
+        self.pointer_center = get_absolute_window_center(
+            self.window_left,
+            self.window_top,
+            self.window_width,
+            self.window_height,
+            include_top_bar=True,
+        )
+
+        # Compute grey pixel position in "SUBMIT" button box
+        self.grey_submit_left = self.window_left + int(
+            self.window_width * (1300 / 2560)
+        )
+        self.grey_submit_top = self.window_top + int(
+            self.window_height * (840 / 1497)
+        )
+
         MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
 
         # Spawn the key_watcher thread
@@ -190,32 +210,32 @@ class CrackPasscode(object):
 
     def correct_passcode(self) -> bool:
         image = ImageGrab.grab(
-            (
-                self.pointer_center[0],
-                self.pointer_center[1] + 6,
-                self.pointer_center[0] + 1,
-                self.pointer_center[1] + 7,
+            bbox=(
+                self.grey_submit_left,
+                self.grey_submit_top,
+                self.grey_submit_left + 1 + 100,
+                self.grey_submit_top + 1 + 100,
             )
         )
-        pixel_color = image.getcolors()[0][1]
-        return pixel_color != (96, 96, 96)
+        return (96, 96, 96) != image.getpixel((0, 0))
 
     def check_stopped(self) -> bool:
         if self.args.limit and self.tries >= self.args.limit:
             logging.info(
                 f"Max tries reached ({str(self.args.limit)}). Stopping..."
             )
-            self.key_watcher.shutdown()
+            self.watcher.shutdown()
             return True
         if (
             self.args.timeout
             and time.time() - self.start_time >= self.args.timeout
         ):
             logging.info(f"Timeout ({str(self.args.timeout)}s). Stopping...")
-            self.key_watcher.shutdown()
+            self.watcher.shutdown()
             return True
         if self.stopped:
             return True
+        return False
 
 
 def get_argument_parser() -> argparse.ArgumentParser:

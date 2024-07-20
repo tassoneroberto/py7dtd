@@ -29,22 +29,9 @@ class AutoShooting(object):
     def __init__(self, args):
         self.stopped = False
         self.args = args
-        self.init_args()
-
-        # Adjust DPI
-        user32 = windll.user32
-        user32.SetProcessDPIAware()
 
         # Load the trained model
         self.detector = Detector(self.args.dataset)
-
-    def init_args(self):
-        self.input_file = os.path.join(self.args.output, "input.png")
-        self.output_file = os.path.join(self.args.output, "output.png")
-
-        if not os.path.exists(self.args.output):
-            os.makedirs(self.args.output)
-            logging.info(f"Folder {self.args.output} created successfully.")
 
     def watch_keys(self):
         self.watcher = KeyWatcher(stop_func=self.stop)
@@ -53,11 +40,18 @@ class AutoShooting(object):
     def start(self):
         # Select the application window
         try:
-            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
+            (
+                self.window_left,
+                self.window_top,
+                self.window_width,
+                self.window_height,
+            ) = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
-        self.pointer_center = get_relative_window_center(self.dimensions)
+        self.pointer_center = get_relative_window_center(
+            self.window_width, self.window_height
+        )
 
         # Spawn the key_watcher thread
         self.watcher_thread = threading.Thread(target=self.watch_keys, args=())
@@ -68,12 +62,16 @@ class AutoShooting(object):
         while not self.stopped:
             logging.info("Capturing new image...")
             # Capture the frame
-            image = ImageGrab.grab(self.dimensions)
-            image.save(self.input_file)
-            # Objects detection
-            detected_entities = self.detector.analyze(
-                self.input_file, self.output_file
+            image = ImageGrab.grab(
+                bbox=(
+                    self.window_left,
+                    self.window_top,
+                    self.window_left + self.window_width,
+                    self.window_top + self.window_height,
+                )
             )
+            # Objects detection
+            detected_entities = self.detector.analyze(image)
 
             logging.info(f"Detected Entities: {detected_entities}")
 
@@ -127,9 +125,6 @@ def get_argument_parser():
         default=500,
         help="Time in ms between each screenshot",
         type=int,
-    )
-    parser.add_argument(
-        "--output", default="auto_shooting", help="Output folder", type=str
     )
 
     return parser

@@ -40,7 +40,12 @@ class BlocksDetection(object):
 
     def start(self):
         try:
-            self.dimensions = select_window(APPLICATION_WINDOW_NAME)
+            (
+                self.window_left,
+                self.window_top,
+                self.window_width,
+                self.window_height,
+            ) = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
@@ -60,30 +65,38 @@ class BlocksDetection(object):
 
     def p_func(self):
         # Capture the frame
-        image = ImageGrab.grab(self.dimensions)
+        image = ImageGrab.grab(
+            bbox=(
+                self.window_left,
+                self.window_top,
+                self.window_left + self.window_width,
+                self.window_top + self.window_height,
+            )
+        )
         pixels = image.load()
-        for x in range(0, self.dimensions[2] - self.dimensions[0]):
-            for y in range(0, self.dimensions[3] - self.dimensions[1]):
+        for x in range(0, self.window_width):
+            for y in range(0, self.window_height):
+                pixel = pixels[x, y]
                 # FIXME: adjust precision
                 # https://github.com/tassoneroberto/py7dtd/issues/18
                 if self.args.destroyed:
                     if (
-                        pixels[x, y][0] >= 125
-                        and pixels[x, y][0] <= 125
-                        and pixels[x, y][1] >= 125
-                        and pixels[x, y][1] <= 125
-                        and pixels[x, y][2] >= 54
-                        and pixels[x, y][2] <= 54
+                        pixel[0] >= 125
+                        and pixel[0] <= 132
+                        and pixel[1] >= 125
+                        and pixel[1] <= 125
+                        and pixel[2] >= 54
+                        and pixel[2] <= 54
                     ):  # destroyed stone
                         pixels[x, y] = (255, 0, 0)  # mark it red
                 if self.args.topsoil:
                     if (
-                        pixels[x, y][0] >= 12
-                        and pixels[x, y][0] <= 19
-                        and pixels[x, y][1] >= 40
-                        and pixels[x, y][1] <= 53
-                        and pixels[x, y][2] >= 19
-                        and pixels[x, y][2] <= 19
+                        pixel[0] >= 12
+                        and pixel[0] <= 19
+                        and pixel[1] >= 40
+                        and pixel[1] <= 53
+                        and pixel[2] >= 19
+                        and pixel[2] <= 19
                     ):  # topsoil
                         pixels[x, y] = (255, 0, 0)  # mark it red
 

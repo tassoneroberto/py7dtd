@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from imageai.Detection.Custom import CustomObjectDetection
+from PIL import Image
 
 
 class Detector:
@@ -15,10 +16,9 @@ class Detector:
         )
         self.detector.loadModel()
 
-    def analyze(self, input_image, output_image):
+    def analyze(self, image: Image.Image) -> dict:
         detections = self.detector.detectObjectsFromImage(
-            input_image=input_image,
-            output_image_path=output_image,
+            input_image=image,
             minimum_percentage_probability=70,
         )
 
