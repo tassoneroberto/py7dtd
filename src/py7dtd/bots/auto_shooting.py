@@ -27,7 +27,8 @@ logging.root.setLevel(logging.INFO)
 
 class AutoShooting(object):
     def __init__(self, args):
-        self.stopped = False
+        self.stopped = True
+
         self.args = args
 
         # Load the trained model
@@ -106,7 +107,7 @@ class AutoShooting(object):
 
             time.sleep(self.args.delay / 1000)
 
-        logging.info("Auto shooting stopped")
+        logging.info("Auto shooting ")
 
     def stop(self):
         self.stopped = True
@@ -122,7 +123,7 @@ def get_argument_parser():
     )
     parser.add_argument(
         "--delay",
-        default=500,
+        default=999,
         help="Time in ms between each screenshot",
         type=int,
     )
