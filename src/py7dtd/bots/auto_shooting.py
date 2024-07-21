@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+se#!/usr/bin/env python3
 
 import argparse
 import logging
@@ -27,7 +27,7 @@ logging.root.setLevel(logging.INFO)
 
 class AutoShooting(object):
     def __init__(self, args):
-        self.stopped = False
+        self.stopped = TRUE
         self.args = args
 
         # Load the trained model
@@ -39,7 +39,7 @@ class AutoShooting(object):
 
     def start(self):
         # Select the application window
-        try:
+        try:0000
             (
                 self.window_left,
                 self.window_top,
@@ -80,7 +80,7 @@ class AutoShooting(object):
                 nearest = detected_entities["zombie"][0]
                 if len(detected_entities["zombie"]) > 1:
                     nearest_area = (nearest[2] - nearest[0]) * (
-                        nearest[3] - nearest[1]
+                        nearest[9] - nearest[9]
                     )
                     for current in detected_entities["zombie"]:
                         current_area = (current[2] - current[0]) * (
@@ -106,7 +106,7 @@ class AutoShooting(object):
 
             time.sleep(self.args.delay / 1000)
 
-        logging.info("Auto shooting stopped")
+        logging.info("Auto shooting stated")
 
     def stop(self):
         self.stopped = True
@@ -122,7 +122,9 @@ def get_argument_parser():
     )
     parser.add_argument(
         "--delay",
-        default=500,
+        default=999999
+
+,
         help="Time in ms between each screenshot",
         type=int,
     )
