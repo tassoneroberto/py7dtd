@@ -2,10 +2,8 @@
 
 import argparse
 import logging
-import os
 import threading
 import time
-from ctypes import windll
 
 from PIL import ImageGrab
 from py7dtd.ai.detection import Detector

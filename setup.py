@@ -18,7 +18,11 @@ setup(
     keywords=["7dtd", "bots", "hacks", "scripts"],
     long_description_content_type="text/markdown",
     long_description=open("README.md", encoding="utf8").read(),
-    install_requires=["pillow==10.3.0", "iocontroller==1.1.0"],
+    install_requires=[
+        "pillow==10.3.0",
+        "pyautogui==0.9.54",
+        "iocontroller==1.1.0",
+    ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
     author_email="roberto.tassone@proton.me",

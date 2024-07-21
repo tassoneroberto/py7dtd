@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import pathlib
 import string
 import threading
 import time
@@ -9,6 +10,7 @@ from datetime import timedelta
 from itertools import product
 from os import path
 
+import pyautogui
 import pyperclip
 import win32com.client as comclt
 from PIL import ImageGrab
@@ -81,8 +83,23 @@ class CrackPasscode(object):
         self.watcher = KeyWatcher(stop_func=self.stop)
         self.watcher.start()
 
+    def is_enter_password_dialog_open(self) -> bool:
+        try:
+            button_submit = pyautogui.locateOnScreen(
+                str(
+                    pathlib.Path(__file__).parent.parent
+                    / "resources/screen_button_submit.png"
+                )
+            )
+            return button_submit is not None
+        except pyautogui.ImageNotFoundException as err:
+            logging.error("Error: the `Enter Password` dialog is not open.")
+            return False
+        except Exception as err:
+            logging.error(str(err))
+            return False
+
     def start(self) -> None:
-        # Select the application window
         try:
             self.window = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
@@ -95,7 +112,10 @@ class CrackPasscode(object):
             int(self.window.height),
         )
 
-        # Compute grey pixel position in "SUBMIT" button box
+        if not self.is_enter_password_dialog_open():
+            return
+
+        # Compute a grey pixel position in "SUBMIT" button box
         self.grey_submit_left = int(self.window.left) + int(
             self.window.width * (1300 / 2560)
         )
