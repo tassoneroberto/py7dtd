@@ -22,6 +22,7 @@ from iocontroller.keymouse.key_watcher import KeyWatcher
 from iocontroller.window.window_handler import (
     get_absolute_window_center,
     select_window,
+    send_message_to_window,
 )
 
 logging.getLogger(__name__)
@@ -29,12 +30,30 @@ logging.root.setLevel(logging.INFO)
 
 
 class CrackPasscode(object):
+
+    CHARACTERS_SETS = {
+        "digits": string.digits,
+        "lower": string.ascii_lowercase,
+        "upper": string.ascii_uppercase,
+        "special": string.punctuation,
+        "lowercyrillic": list("абвгдеёжзийклмнопстуфхцчшщъыьэюя"),
+        "uppercyrillic": list("АБВГДЕЁЖЗИЙКЛМНОПСТУФХЦЧШЩЪЫЬЭЮЯ"),
+    }
+
     def __init__(self, args):
         self.stopped = False
         self.args = args
         self.init_args()
 
     def init_args(self) -> None:
+        if self.args.max > 20:
+            logging.error("Error: maximum passcode length is 20.")
+            exit()
+
+        if self.args.min <= 0:
+            logging.error("Error: minimum passcode length is 1.")
+            exit()
+
         if self.args.brute and self.args.dict:
             logging.error(
                 "Error: only one method can be selected. Available are: `brute`, `dict`."
@@ -111,24 +130,27 @@ class CrackPasscode(object):
 
     def crack_brute(self) -> None:
         allowed_chars = []
-        if self.args.digits:
-            allowed_chars += string.digits
-        if self.args.lower:
-            allowed_chars += string.ascii_lowercase
-        if self.args.upper:
-            allowed_chars += string.ascii_uppercase
-        if self.args.special:
-            allowed_chars += string.punctuation
-        if self.args.lowercyrillic:
-            allowed_chars += list("абвгдеёжзийклмнопстуфхцчшщъыьэюя")
-        if self.args.uppercyrillic:
-            allowed_chars += list("АБВГДЕЁЖЗИЙКЛМНОПСТУФХЦЧШЩЪЫЬЭЮЯ")
+        selected_sets = []
+
+        if self.args.allcharacters:
+            for set_name, set_value in CrackPasscode.CHARACTERS_SETS.items():
+                selected_sets.append(set_name)
+                allowed_chars += set_value
+        else:
+            for set_name, is_selected in vars(self.args).items():
+                if not is_selected:
+                    continue
+                if set_name in CrackPasscode.CHARACTERS_SETS:
+                    selected_sets.append(set_name)
+                    allowed_chars += CrackPasscode.CHARACTERS_SETS[set_name]
 
         if len(allowed_chars) == 0:
             logging.warning(
                 "Warning: empty characters set. `digits` and `lower` have been selected by default."
             )
             allowed_chars += string.digits + string.ascii_lowercase
+        else:
+            logging.info(f"Selected characters sets: {selected_sets}")
 
         logging.info("Brute force attack started")
         for length in range(self.args.min, self.args.max + 1):
@@ -182,12 +204,12 @@ class CrackPasscode(object):
     # documentation: https://ss64.com/vb/sendkeys.html
     def try_passcode(self, passcode) -> None:
         pyperclip.copy(passcode)  # copy passcode to clipboard
-        RightMouseClick()
+        RightMouseClick()  # right click -> select inserted text
         time.sleep(self.delay)
-        self.wsh.SendKeys("^v")  # CTRL+V
-        time.sleep(self.delay)
+        send_message_to_window(
+            self.window._hWnd, passcode
+        )  # type the passcode
         self.wsh.SendKeys("{ENTER}")  # press ENTER
-        time.sleep(self.delay)
 
         if self.correct_passcode():
             logging.info(f"Passcode found: {passcode}")
@@ -292,6 +314,12 @@ def get_argument_parser() -> argparse.ArgumentParser:
         "--special",
         default=False,
         help="Include special characters",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--allcharacters",
+        default=False,
+        help="Include all characters",
         action="store_true",
     )
     parser.add_argument(

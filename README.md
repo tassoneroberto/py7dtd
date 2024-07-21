@@ -236,12 +236,13 @@ The following table is listing all the arguments to use for each method:
 | help          | Arguments description           | `N/A`|`N/A`|
 | min           | Minimum length                  | `1`|`brute`|
 | max           | Maximum length                  | `20`|`brute`|
-| digits        | Include digits                  | `False`*|`brute`|
-| lower         | Include lowercase characters    | `False`*|`brute`|
-| upper         | Include uppercase characters    | `False`*|`brute`|
-| lowercyrillic | Include lowercase cyrillic characters    | `False`*|`brute`|
-| uppercyrillic | Include uppercase cyrillic characters    | `False`*|`brute`|
-| special       | Include special characters      | `False`*|`brute`|
+| digits        | Include digits                  | `False`|`brute`|
+| lower         | Include lowercase characters    | `False`|`brute`|
+| upper         | Include uppercase characters    | `False`|`brute`|
+| lowercyrillic | Include lowercase cyrillic characters    | `False`|`brute`|
+| uppercyrillic | Include uppercase cyrillic characters    | `False`|`brute`|
+| special       | Include special characters      | `False`|`brute`|
+| allcharacters | Include all characters          | `False`|`brute`|
 | dictpath      | Dictionary file path            | `./dictionaries/top1000000.txt`|`dict`|
 | resumedict    | Line number to resume a dictionary attack | `0`|`dict`|
 | limit         | Maximum number of tries         | `∞`|`brute`, `dict`|
@@ -250,7 +251,7 @@ The following table is listing all the arguments to use for each method:
 
 ---
 
-**At least one of these is required*
+**If no characters set is selected for the brute-force method, the following sets will be automatically selected: [`digit`, `lower`]*
 
 ## Blocks detection
 
