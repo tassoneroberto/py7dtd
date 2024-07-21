@@ -173,6 +173,20 @@ class CrackPasscode(object):
         else:
             logging.info(f"Selected characters sets: {selected_sets}")
 
+        # Geometric series
+        total_attempts = float(
+            "{:e}".format(
+                (
+                    len(allowed_chars) ** self.args.min
+                    - len(allowed_chars) ** (self.args.max + 1)
+                )
+                / (1 - len(allowed_chars))
+            )
+        )
+        logging.info(
+            f"A total of {total_attempts} possible combinations can be generated with the selected characters sets."
+        )
+
         logging.info("Brute force attack started")
         for length in range(self.args.min, self.args.max + 1):
             to_attempt = product(allowed_chars, repeat=length)
@@ -186,7 +200,7 @@ class CrackPasscode(object):
                 self.attempts += 1
                 if self.attempts % 100 == 0:
                     logging.info(
-                        f"Total processed pass codes: {str(self.attempts)}"
+                        f"Total processed pass codes: {str(self.attempts)} ({'{:.6f}'.format(self.attempts/total_attempts*100)}%)"
                         + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
                     )
                 if self.check_stopped():
