@@ -40,12 +40,7 @@ class BlocksDetection(object):
 
     def start(self):
         try:
-            (
-                self.window_left,
-                self.window_top,
-                self.window_width,
-                self.window_height,
-            ) = select_window(APPLICATION_WINDOW_NAME)
+            self.window = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
@@ -67,16 +62,16 @@ class BlocksDetection(object):
         # Capture the frame
         image = ImageGrab.grab(
             bbox=(
-                self.window_left,
-                self.window_top,
-                self.window_left + self.window_width,
-                self.window_top + self.window_height,
+                int(self.window.left),
+                int(self.window.top),
+                int(self.window.left) + int(self.window.width),
+                int(self.window.top) + int(self.window.height),
             )
         )
         pixels = image.load()
-        for x in range(0, self.window_width):
-            for y in range(0, self.window_height):
-                pixel = pixels[x, y]
+        for x in range(0, int(self.window.width)):
+            for y in range(0, int(self.window.height)):
+                pixel = pixels[x, y]  # type: ignore
                 # FIXME: adjust precision
                 # https://github.com/tassoneroberto/py7dtd/issues/18
                 if self.args.destroyed:
@@ -88,7 +83,7 @@ class BlocksDetection(object):
                         and pixel[2] >= 54
                         and pixel[2] <= 54
                     ):  # destroyed stone
-                        pixels[x, y] = (255, 0, 0)  # mark it red
+                        pixels[x, y] = (255, 0, 0)  # type: ignore
                 if self.args.topsoil:
                     if (
                         pixel[0] >= 12
@@ -98,7 +93,7 @@ class BlocksDetection(object):
                         and pixel[2] >= 19
                         and pixel[2] <= 19
                     ):  # topsoil
-                        pixels[x, y] = (255, 0, 0)  # mark it red
+                        pixels[x, y] = (255, 0, 0)  # type: ignore
 
         filename = (
             f'{str(datetime.datetime.now().strftime("%Y%m%d-%I%M%S%f"))}.png'

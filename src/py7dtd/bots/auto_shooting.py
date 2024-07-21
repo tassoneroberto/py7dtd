@@ -40,17 +40,12 @@ class AutoShooting(object):
     def start(self):
         # Select the application window
         try:
-            (
-                self.window_left,
-                self.window_top,
-                self.window_width,
-                self.window_height,
-            ) = select_window(APPLICATION_WINDOW_NAME)
+            self.window = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
         self.pointer_center = get_relative_window_center(
-            self.window_width, self.window_height
+            int(self.window.width), int(self.window.height)
         )
 
         # Spawn the key_watcher thread
@@ -64,10 +59,10 @@ class AutoShooting(object):
             # Capture the frame
             image = ImageGrab.grab(
                 bbox=(
-                    self.window_left,
-                    self.window_top,
-                    self.window_left + self.window_width,
-                    self.window_top + self.window_height,
+                    int(self.window.left),
+                    int(self.window.top),
+                    int(self.window.left) + int(self.window.width),
+                    int(self.window.top) + int(self.window.height),
                 )
             )
             # Objects detection

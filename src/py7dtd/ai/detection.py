@@ -24,11 +24,11 @@ class Detector:
 
         detected_entities = {}
         for detection in detections:
-            if detection["name"] not in detected_entities:
-                detected_entities[detection["name"]] = []
+            if detection["name"] not in detected_entities:  # type: ignore
+                detected_entities[detection["name"]] = []  # type: ignore
 
-            detected_entities[detection["name"]].append(
-                detection["box_points"]
+            detected_entities[detection["name"]].append(  # type: ignore
+                detection["box_points"]  # type: ignore
             )
 
         return detected_entities

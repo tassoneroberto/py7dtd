@@ -65,28 +65,23 @@ class CrackPasscode(object):
     def start(self) -> None:
         # Select the application window
         try:
-            (
-                self.window_left,
-                self.window_top,
-                self.window_width,
-                self.window_height,
-            ) = select_window(APPLICATION_WINDOW_NAME)
+            self.window = select_window(APPLICATION_WINDOW_NAME)
         except Exception as err:
             logging.error(str(err))
             return
         self.pointer_center = get_absolute_window_center(
-            self.window_left,
-            self.window_top,
-            self.window_width,
-            self.window_height,
+            int(self.window.left),
+            int(self.window.top),
+            int(self.window.width),
+            int(self.window.height),
         )
 
         # Compute grey pixel position in "SUBMIT" button box
-        self.grey_submit_left = self.window_left + int(
-            self.window_width * (1300 / 2560)
+        self.grey_submit_left = int(self.window.left) + int(
+            self.window.width * (1300 / 2560)
         )
-        self.grey_submit_top = self.window_top + int(
-            self.window_height * (840 / 1497)
+        self.grey_submit_top = int(self.window.top) + int(
+            self.window.height * (840 / 1497)
         )
 
         MoveMouseAbsolute(self.pointer_center[0], self.pointer_center[1])
