@@ -105,15 +105,16 @@ class CrackPasscode(object):
         except Exception as err:
             logging.error(str(err))
             return
+
+        if not self.is_enter_password_dialog_open():
+            return
+
         self.pointer_center = get_absolute_window_center(
             int(self.window.left),
             int(self.window.top),
             int(self.window.width),
             int(self.window.height),
         )
-
-        if not self.is_enter_password_dialog_open():
-            return
 
         # Compute a grey pixel position in "SUBMIT" button box
         self.grey_submit_left = int(self.window.left) + int(
