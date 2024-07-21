@@ -79,7 +79,6 @@ class CrackPasscode(object):
             self.window_top,
             self.window_width,
             self.window_height,
-            include_top_bar=True,
         )
 
         # Compute grey pixel position in "SUBMIT" button box
@@ -213,8 +212,8 @@ class CrackPasscode(object):
             bbox=(
                 self.grey_submit_left,
                 self.grey_submit_top,
-                self.grey_submit_left + 1 + 100,
-                self.grey_submit_top + 1 + 100,
+                self.grey_submit_left + 1,
+                self.grey_submit_top + 1,
             )
         )
         return (96, 96, 96) != image.getpixel((0, 0))
