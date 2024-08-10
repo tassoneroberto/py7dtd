@@ -191,8 +191,6 @@ The following table is listing all the arguments that can be specified:
 
 ## Passcode cracking
 
-❗ Under development ❗
-
 Brute-force/dictionary attack on chests/doors passcode.
 
 ### Usage
@@ -251,25 +249,21 @@ The following table is listing all the arguments to use for each method:
 
 ---
 
-**If no characters set is selected for the brute-force method, the following sets will be automatically selected: [`digit`, `lower`]*
+**If no characters set is selected for the brute-force method, the following sets will be automatically selected: [`digits`, `lower`]*
 
 ## Blocks detection
 
-❗ Under development ❗
-
-Detection of block, like `topsoil` and `destroyed stone` blocks, by taking screenshots of the map.
+Detection of blocks like `topsoil` and `destroyed stone` by analyzing the block's pixel color from the game map.
 
 ### Usage
 
-It is recommended to set the game in window mode with the highest resolution possible.
-
-Specify the blocks to be identified by passing them as arguments (e.g. `--topsoil`). Specify an output folder (or keep the default one `./blocks_detection`). Run the script and open the game map by pressing `M`. Press `P` to take a screenshot of the map and automatically mark in red the specified blocks. The screenshots, with the block marked, will be saved in the output folder.
-
-Note: Press `ESC` to interrupt the script.
+Export the game map into a `png` file with the external tool <https://github.com/DorHans/7DTD-SMR>. Use the exported map as input for the blocks detections. Each pixel will be analyzed and, if an interested block is detected, it will be marked in red in the output file.
 
 ```powershell
-py7dtd_blocks_detection --topsoil --destroyed
+py7dtd_blocks_detection --topsoil --destroyed_stone --input .\map.png
 ```
+
+If the argument `output` is not specified, an output file will be stored in the current folder with the same name as the input file and a suffix `_output` (e.g. `map_output.png`).
 
 Get the arguments list with the `help` function:
 
@@ -277,7 +271,7 @@ Get the arguments list with the `help` function:
 py7dtd_blocks_detection --help
 ```
 
-Example of detection of topsoil blocks in the desert biome:
+Example of detection of topsoil and destroyed stone blocks in the desert biome:
 
 ![detection](preview/blockdetection-before-preview.png)
 
@@ -287,11 +281,18 @@ Example of detection of topsoil blocks in the desert biome:
 
 The following table is listing all the arguments:
 
-| arg           |  description              |   default   |
-|:-------------:|:-------------------------:| :----------:|
-| help          | Arguments description     | `N/A`        |
-| topsoil       | Topsoil blocks            | `False`*   |
-| destroyed     | Destroyed stone blocks    | `False`*   |
-| output        | Output folder             | `./blocks_detection`|
+| arg             |  description            |   default   |
+|:---------------:|:-----------------------:| :----------:|
+| help            | Arguments description   | `N/A`       |
+| input           | Input filename          | `N/A`*      |
+| topsoil         | Topsoil blocks          | `False`**    |
+| dirt            | Dirt blocks             | `False`**    |
+| gravel          | Gravel blocks           | `False`**    |
+| destroyed_stone | Destroyed stone blocks  | `False`**    |
+| output          | Output filename         | `input + '_output' suffix`|
 
-**At least one of these is required*
+**Required*
+
+***At least one of these is required*
+
+Note: `topsoil` blocks and `dirt` blocks appear with the same color in the map.

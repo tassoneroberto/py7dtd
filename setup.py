@@ -22,6 +22,8 @@ setup(
         "pillow==10.3.0",
         "pyautogui==0.9.54",
         "iocontroller==1.1.0",
+        "filetype==1.2.0",
+        "enlighten==1.12.4",
     ],
     url="https://github.com/tassoneroberto/py7dtd",
     author="Roberto Tassone",
