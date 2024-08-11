@@ -138,3 +138,4 @@ auto_shooting/
 .vscode
 dataset/json/*
 dataset/models/*
+dev_test/

@@ -6,10 +6,10 @@ import pathlib
 import string
 import threading
 import time
-from datetime import timedelta
 from itertools import product
 from os import path
 
+import enlighten
 import pyautogui
 import pyperclip
 import win32com.client as comclt
@@ -83,6 +83,7 @@ class CrackPasscode(object):
         self.watcher = KeyWatcher(stop_func=self.stop)
         self.watcher.start()
 
+    # FIXME: does not work with different screen resolutions and rescaling
     def is_enter_password_dialog_open(self) -> bool:
         try:
             button_submit = pyautogui.locateOnScreen(
@@ -106,8 +107,8 @@ class CrackPasscode(object):
             logging.error(str(err))
             return
 
-        if not self.is_enter_password_dialog_open():
-            return
+        # if not self.is_enter_password_dialog_open():
+        #     return
 
         self.pointer_center = get_absolute_window_center(
             int(self.window.left),
@@ -173,21 +174,27 @@ class CrackPasscode(object):
         else:
             logging.info(f"Selected characters sets: {selected_sets}")
 
-        # Geometric series
-        total_attempts = float(
-            "{:e}".format(
-                (
-                    len(allowed_chars) ** self.args.min
-                    - len(allowed_chars) ** (self.args.max + 1)
-                )
-                / (1 - len(allowed_chars))
-            )
-        )
         logging.info(
-            f"A total of {total_attempts} possible combinations can be generated with the selected characters sets."
+            f"Selected passcode length: min={self.args.min}, max:{self.args.max}"
+        )
+
+        # Geometric series
+        total_attempts = int(
+            len(allowed_chars) ** self.args.min
+            - len(allowed_chars) ** (self.args.max + 1)
+        ) / (1 - len(allowed_chars))
+
+        logging.info(
+            f"A total of {total_attempts:g} possible combinations can be generated with the selected characters sets and length."
         )
 
         logging.info("Brute force attack started")
+
+        progress_bar_manager = enlighten.get_manager()
+        progress_bar = progress_bar_manager.counter(
+            total=int(total_attempts), unit="attempts"
+        )
+
         for length in range(self.args.min, self.args.max + 1):
             to_attempt = product(allowed_chars, repeat=length)
 
@@ -197,23 +204,38 @@ class CrackPasscode(object):
                 if len(self.last_codes) > 5:
                     self.last_codes.pop(0)
                 self.try_passcode(passcode)
+                progress_bar.update()
                 self.attempts += 1
-                if self.attempts % 100 == 0:
-                    logging.info(
-                        f"Total processed pass codes: {str(self.attempts)} ({'{:.6f}'.format(self.attempts/total_attempts*100)}%)"
-                        + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
-                    )
                 if self.check_stopped():
+                    progress_bar.close()
+                    progress_bar_manager.stop()
                     logging.info(f"Last tried passcode: {passcode}")
                     return
 
     def crack_dict(self) -> None:
         logging.info("Dictionary attack started")
+        logging.info(f"Loading the dictionary file at: {self.args.dictpath}")
+
+        with open(self.args.dictpath, "rb") as f:
+            total_lines = sum(1 for _ in f)
+
+        logging.info(f"Successfully loaded! Total lines: {total_lines}")
+
+        total_attempts = total_lines - (
+            self.args.resumedict if self.args.resumedict is not None else 0
+        )
+
         line_count = 0
         if self.args.resumedict:
             logging.info(
-                f"Start reading dictionary from line {str(self.args.resumedict)}"
+                f"Resume dictionary attack from line {str(self.args.resumedict)}/{total_lines}"
             )
+
+        progress_bar_manager = enlighten.get_manager()
+        progress_bar = progress_bar_manager.counter(
+            total=int(total_attempts), unit="attempts"
+        )
+
         with open(self.args.dictpath, "r", encoding="utf8") as dict_file:
             for line in dict_file:
                 line_count += 1
@@ -224,13 +246,11 @@ class CrackPasscode(object):
                 if len(self.last_codes) > 5:
                     self.last_codes.pop(0)
                 self.try_passcode(passcode)
+                progress_bar.update()
                 self.attempts += 1
-                if self.attempts % 100 == 0:
-                    logging.info(
-                        f"Total processed pass codes: {str(self.attempts + self.args.resumedict)}"
-                        + f" | Elapsed time: {str(timedelta(seconds=time.time() - self.start_time))}"
-                    )
                 if self.check_stopped():
+                    progress_bar.close()
+                    progress_bar_manager.stop()
                     logging.info(
                         f"Last tried passcode (line {str(line_count)}): {passcode}"
                     )

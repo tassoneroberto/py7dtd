@@ -54,7 +54,7 @@ class BlocksDetection(object):
         logging.info("Image loaded successfully!")
         progress_bar_manager = enlighten.get_manager()
         progress_bar = progress_bar_manager.counter(
-            total=image.width, desc="Processing", unit="lines"
+            total=image.width, unit="lines"
         )
         for x in range(0, image.width):
             progress_bar.update()
