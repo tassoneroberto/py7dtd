@@ -44,6 +44,8 @@ class BlocksDetection(object):
             self.output_filename = (
                 os.path.splitext(self.args.input)[0] + "_output.png"
             )
+        else:
+            self.output_filename = self.args.output
 
     def analyze(self):
         logging.info(f"Loading the image file at: {self.args.input}")
