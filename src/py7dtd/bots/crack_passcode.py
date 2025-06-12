@@ -37,7 +37,8 @@ class CrackPasscode(object):
         "digits": string.digits,
         "lower": string.ascii_lowercase,
         "upper": string.ascii_uppercase,
-        "special": string.punctuation,
+        "punctuation": string.punctuation,
+        "whitespace": string.whitespace,
         "lowercyrillic": list("абвгдеёжзийклмнопстуфхцчшщъыьэюя"),
         "uppercyrillic": list("АБВГДЕЁЖЗИЙКЛМНОПСТУФХЦЧШЩЪЫЬЭЮЯ"),
     }
@@ -366,9 +367,15 @@ def get_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
     )
     parser.add_argument(
-        "--special",
+        "--punctuation",
         default=False,
-        help="Include special characters",
+        help="Include punctuation characters",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--whitespace",
+        default=False,
+        help="Include whitespace characters",
         action="store_true",
     )
     parser.add_argument(

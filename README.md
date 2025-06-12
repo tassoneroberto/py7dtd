@@ -237,9 +237,10 @@ The following table is listing all the arguments to use for each method:
 | digits        | Include digits                  | `False`|`brute`|
 | lower         | Include lowercase characters    | `False`|`brute`|
 | upper         | Include uppercase characters    | `False`|`brute`|
-| lowercyrillic | Include lowercase cyrillic characters    | `False`|`brute`|
-| uppercyrillic | Include uppercase cyrillic characters    | `False`|`brute`|
-| special       | Include special characters      | `False`|`brute`|
+| lowercyrillic | Include lowercase cyrillic characters | `False`|`brute`|
+| uppercyrillic | Include uppercase cyrillic characters | `False`|`brute`|
+| punctuation   | Include punctuation characters  | `False`|`brute`|
+| whitespace    | Include whitespace characters   | `False`|`brute`|
 | allcharacters | Include all characters          | `False`|`brute`|
 | dictpath      | Dictionary file path            | `./dictionaries/top1000000.txt`|`dict`|
 | resumedict    | Line number to resume a dictionary attack | `0`|`dict`|
