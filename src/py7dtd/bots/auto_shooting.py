@@ -7,7 +7,7 @@ import time
 
 from PIL import ImageGrab
 from py7dtd.ai.detection import Detector
-from py7dtd.constants import APPLICATION_WINDOW_NAME
+from py7dtd.constants import APPLICATION_WINDOW_NAME, ENTITY_ZOMBIE
 
 from iocontroller.keymouse.commands_controller import (
     LeftMouseClick,
@@ -69,13 +69,13 @@ class AutoShooting(object):
             logging.info(f"Detected Entities: {detected_entities}")
 
             # If zombies are detected, get the nearest (biggest rectangle)
-            if "zombie" in detected_entities:
-                nearest = detected_entities["zombie"][0]
-                if len(detected_entities["zombie"]) > 1:
+            if ENTITY_ZOMBIE in detected_entities:
+                nearest = detected_entities[ENTITY_ZOMBIE][0]
+                if len(detected_entities[ENTITY_ZOMBIE]) > 1:
                     nearest_area = (nearest[2] - nearest[0]) * (
                         nearest[3] - nearest[1]
                     )
-                    for current in detected_entities["zombie"]:
+                    for current in detected_entities[ENTITY_ZOMBIE]:
                         current_area = (current[2] - current[0]) * (
                             current[3] - current[1]
                         )
