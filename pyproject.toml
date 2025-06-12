@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py7dtd"
+dynamic = ["version", "readme"]
+description = "Collection of 7 Days to Die bots, scripts and hacks"
+keywords = ["7dtd", "bots", "hacks", "scripts"]
+license = { text = "MIT" }
+authors = [
+    { name = "Roberto Tassone", email = "roberto.tassone@proton.me" }
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3.10",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pillow==10.3.0",
+    "pyautogui==0.9.54",
+    "iocontroller==1.1.0",
+    "filetype==1.2.0",
+    "enlighten==1.12.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/tassoneroberto/py7dtd"
+
+[project.scripts]
+py7dtd_model_training = "py7dtd.ai.training:main"
+py7dtd_crack_passcode = "py7dtd.bots.crack_passcode:main"
+py7dtd_auto_shooting = "py7dtd.bots.auto_shooting:main"
+py7dtd_blocks_detection = "py7dtd.scripts.blocks_detection:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["py7dtd*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "py7dtd.version.__version__" }
+readme = { file = "README.md", content-type = "text/markdown" }
+
+[project.optional-dependencies]
+ai = [
+    "light-the-torch==0.8.0",
+    "numpy==1.24.1",
+    "scipy==1.10.0",
+    "matplotlib==3.10.3",
+    "opencv-python==4.5.5.64",
+    "imageai==3.0.3",
+    "tqdm==4.64.1",
+    "labelImg==1.8.6"
+]
