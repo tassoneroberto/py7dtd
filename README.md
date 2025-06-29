@@ -144,6 +144,7 @@ The annotation of the images has been done using the tool `labelImg`: <https://g
 ### Proof of concept
 
 ![detection](preview/preview1.png)
+![detection](preview/preview2.png)
 
 ---
 
@@ -163,7 +164,10 @@ Simple aim bot capable of:
 py7dtd_auto_shooting --delay 200
 ```
 
-Note: Press `ESC` to interrupt the bot.
+Notes:
+
+- Press `DEL` to interrupt the bot.
+- If you have multiple monitors, make sure the game is running on the primary monitor.
 
 ### Command line arguments
 
@@ -172,9 +176,14 @@ The following table is listing all the arguments that can be specified:
 | arg           |  description      |   default   |
 |:-------------:|:-----------------:| :----------:|
 | help          | Arguments description           | `N/A`|
+| dataset       | Dataset folder path             | `./dataset`|
 | delay         | Time in ms between each screenshot | `500`|
+| hfov          | Horizontal field of view in degrees (in-game option) | `65`|
+| log           | Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) | `INFO`|
+| debug         | Enable debug mode               | `False`|
 
-![detection](preview/preview2.png)
+![aimbot](preview/aimbot-before.jpg)
+![aimbot](preview/aimbot-after.jpg)
 
 ---
 
@@ -188,7 +197,10 @@ It is recommended to set the game in window mode with a resolution of 640x480.
 
 Example of a brute-force attack testing pass codes composed of digits and lowercase characters.
 
-Note: Press `ESC` to interrupt the bot.
+Notes:
+
+- Press `DEL` to interrupt the bot.
+- If you have multiple monitors, make sure the game is running on the primary monitor.
 
 ```powershell
 py7dtd_crack_passcode --brute --digits --lower
@@ -285,4 +297,7 @@ The following table is listing all the arguments:
 
 ***At least one of these is required*
 
-Note: `topsoil` blocks and `dirt` blocks appear with the same color in the map.
+Notes:
+
+- `topsoil` blocks and `dirt` blocks appear with the same color in the map.
+- If you have multiple monitors, make sure the game is running on the primary monitor.

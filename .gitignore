@@ -139,3 +139,4 @@ auto_shooting/
 dataset/json/*
 dataset/models/*
 dev_test/
+debug/
