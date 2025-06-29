@@ -19,12 +19,12 @@ from py7dtd.constants import APPLICATION_WINDOW_NAME
 from iocontroller.keymouse.commands_controller import (
     MoveMouseAbsolute,
     RightMouseClick,
+    send_message_to_window,
 )
 from iocontroller.keymouse.key_watcher import KeyWatcher
 from iocontroller.window.window_handler import (
     get_absolute_window_center,
     select_window,
-    send_message_to_window,
 )
 
 logging.getLogger(__name__)
